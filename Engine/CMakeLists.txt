@@ -9,6 +9,11 @@ find_package(GLEW REQUIRED)
 target_include_directories(Engine PRIVATE ${GLEW_INCLUDE_DIRS})
 target_link_libraries(Engine PUBLIC GLEW::GLEW)
 
+# Graphics calculations
+find_package(glm REQUIRED)
+target_include_directories(Engine PRIVATE ${glm_INCLUDE_DIRS})
+target_link_libraries(Engine PUBLIC glm::glm)
+
 # Enum to String lib for logger
 find_package(magic_enum CONFIG REQUIRED)
 target_link_libraries(Engine PRIVATE magic_enum::magic_enum)
