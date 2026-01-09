@@ -1,10 +1,13 @@
 #include "Engine.h"
-#include "render/Renderer.h"
+#include "Render/Renderer.h"
+#include "Input/InputManager.h"
 
 Engine::Engine()
 {
-    Render = std::make_unique<Renderer>();
-    Render->InitRenderer();
+    CurrentRenderer = std::make_unique<Renderer>();
+    CurrentRenderer->InitRenderer();
+    CurrentInputManager = std::make_shared<InputManager>();
+    CurrentInputManager->BindInput(std::bind(&Engine::SetShouldShutdownTrue, this), InputKey::ESC, InputAction::PRESSED);
 }
 
 Engine::~Engine()
@@ -15,10 +18,7 @@ void Engine::Run()
 {
     while (!ShouldShutdown)
     {
-        if (Render->Tick())
-        {
-            SetShouldShutdownTrue();
-        }
+        CurrentRenderer->Tick();
     }
 }
 

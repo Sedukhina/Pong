@@ -13,7 +13,10 @@ public:
     void SetShouldShutdownTrue();
 
 protected:
-    std::unique_ptr<class Renderer> Render;
+
+    std::unique_ptr<class Renderer> CurrentRenderer;
+
+    std::shared_ptr<class InputManager> CurrentInputManager;
 
     bool ShouldShutdown = false;
 };

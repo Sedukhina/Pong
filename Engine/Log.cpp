@@ -8,4 +8,3 @@ void Log(LogLevel level, const char* message)
         std::string(magic_enum::enum_name(level)).c_str(),
         message);
 }
-

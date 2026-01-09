@@ -1,4 +1,4 @@
-file(GLOB_RECURSE ENGINE_SRC "*.cpp")
+file(GLOB_RECURSE ENGINE_SRC "*.h" "*.cpp")
 add_library(Engine STATIC ${ENGINE_SRC})
 
 # Window and graphics libs

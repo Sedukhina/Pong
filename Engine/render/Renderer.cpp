@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "ShaderProgram.h"
+#include "InputCallback.h"
 #include "Log.h"
 
 Renderer::Renderer()
@@ -25,7 +26,7 @@ bool Renderer::InitRenderer()
 	glfwMakeContextCurrent(window);
 
 	// TODO: Setting Input Section
-	// glfwSetKeyCallback(window, InputCallback::key_callback);
+	glfwSetKeyCallback(window, key_callback);
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
