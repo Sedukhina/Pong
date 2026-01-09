@@ -1,0 +1,10 @@
+{
+    "name": "engine",
+    "version": "0.1",
+    "dependencies": [
+      "glfw3",
+      "glew",
+      "magic-enum"
+    ],
+    "builtin-baseline": "64adda19c86e89526b5e27703a193c14477cce07"
+  }
