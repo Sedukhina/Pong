@@ -8,10 +8,9 @@ class Renderer
 {
 public:
 	Renderer();
-	bool InitRenderer();
-
-	// Returns ShouldShutdown status  
-	bool Tick();
+	bool InitRenderer();  
+	
+	bool Tick(class Level* CurrentLevel);
 
 	~Renderer();
 

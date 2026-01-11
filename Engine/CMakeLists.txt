@@ -1,6 +1,9 @@
 file(GLOB_RECURSE ENGINE_SRC "*.h" "*.cpp")
 add_library(Engine STATIC ${ENGINE_SRC})
 
+set(ASSETS_DIR ${CMAKE_BINARY_DIR}/Assets/)
+add_compile_definitions("ASSETS_DIR=${ASSETS_DIR}")
+
 # Window and graphics libs
 find_package(glfw3 CONFIG REQUIRED)
 target_include_directories(Engine PRIVATE ${glfw3_INCLUDE_DIRS})
@@ -13,6 +16,10 @@ target_link_libraries(Engine PUBLIC GLEW::GLEW)
 find_package(glm REQUIRED)
 target_include_directories(Engine PRIVATE ${glm_INCLUDE_DIRS})
 target_link_libraries(Engine PUBLIC glm::glm)
+
+# Images/Textures loading lib
+find_package(stb REQUIRED)
+target_include_directories(Engine PRIVATE ${stb_INCLUDE_DIRS})
 
 # Enum to String lib for logger
 find_package(magic_enum CONFIG REQUIRED)

@@ -5,7 +5,8 @@
       "glfw3",
       "glew",
       "magic-enum",
-      "glm"
+      "glm",
+      "stb"
     ],
     "builtin-baseline": "64adda19c86e89526b5e27703a193c14477cce07"
   }

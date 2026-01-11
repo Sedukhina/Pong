@@ -2,8 +2,12 @@
 #include "ShaderProgram.h"
 #include "InputCallback.h"
 #include "Log.h"
+#include "Scene/Level.h"
+#include "Assets/Model.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+unsigned int VBO, VAO;
 
 Renderer::Renderer()
 {
@@ -27,7 +31,6 @@ bool Renderer::InitRenderer()
 	}
 	glfwMakeContextCurrent(window);
 
-	// TODO: Setting Input Section
 	glfwSetKeyCallback(window, key_callback);
 
 	glewExperimental = GL_TRUE;
@@ -56,9 +59,6 @@ bool Renderer::InitRenderer()
 	CurrentShaderProgram->Use();
 
 	ModelMatrixLocation = CurrentShaderProgram->GetUniformLocation("ModelMatrix");
-	//IMPORTANT: TEMP
-	glm::mat4 ModelMatrix = glm::mat4(1.0f);
-	glUniformMatrix4fv(ModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(ModelMatrix));
 
 	// Setting camera
 	CameraMatrixLocation = CurrentShaderProgram->GetUniformLocation("CameraMatrix");
@@ -74,7 +74,7 @@ bool Renderer::InitRenderer()
 		 0.5f, -0.5f, 0.0f, // правая вершина
 		 0.0f,  0.5f, 0.0f  // верхняя вершина   
 	};
-	unsigned int VBO, VAO;
+	
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glBindVertexArray(VAO);
@@ -87,13 +87,26 @@ bool Renderer::InitRenderer()
 	return true;
 }
 
-bool Renderer::Tick()
+bool Renderer::Tick(Level* CurrentLevel)
 {
 	glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// IMPORTANT: TEST ONLY TRIANGLE
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	const std::vector<std::shared_ptr<Actor>> ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
+	for (std::shared_ptr<Actor> ActorOnLevel : ActorsOnLevel)
+	{
+		glm::mat4 ModelMatrix = ActorOnLevel->GetModelMatrix();
+		glUniformMatrix4fv(ModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+
+		const std::vector<std::shared_ptr<Model>> Models = ActorOnLevel->GetActorsModels();
+		for (std::shared_ptr<Model> ActorsModel : Models)
+		{
+			GLint TexAddres = Globals::GetAssetManager()->GetTextureAddress(ActorsModel->GetTexturePath(), ActorsModel->GetTextureID());
+			glBindTexture(GL_TEXTURE_2D, TexAddres);
+			glBindVertexArray(VAO);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		}
+	}
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();

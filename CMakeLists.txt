@@ -7,10 +7,19 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_compile_definitions("BIN_ROOT=${CMAKE_BINARY_DIR}")
-add_compile_definitions("ASSETS_DIR=${ENGINE_ASSET_DIR}")
 
 set(PONG_SRC "Pong.cpp")
 add_executable(Pong ${PONG_SRC})
+
+set(ASSETS_DIR ${CMAKE_BINARY_DIR}/Assets)
+target_include_directories(Pong PUBLIC ${ASSETS_DIR})
+file(GLOB assets "Assets/*")
+
+foreach(file ${assets})
+    message(STATUS "Copying resource ${file}")
+    file(COPY ${file} DESTINATION ${ASSETS_DIR})
+endforeach()
+
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
