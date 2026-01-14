@@ -20,9 +20,10 @@ bool Renderer::InitRenderer()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	window = glfwCreateWindow(mode->width, mode->height, "Engine", glfwGetPrimaryMonitor(), nullptr);
+	//window = glfwCreateWindow(mode->width, mode->height, "Engine", glfwGetPrimaryMonitor(), nullptr);
+	window = glfwCreateWindow((int)(mode->width * 0.8f), (int)(mode->height * 0.8f), "Pong", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		LOG_FATAL("Failed to create GLFW window");
@@ -89,7 +90,7 @@ bool Renderer::InitRenderer()
 
 bool Renderer::Tick(Level* CurrentLevel)
 {
-	glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
+	glClearColor(0.05f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	const std::vector<std::shared_ptr<Actor>> ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
@@ -101,10 +102,12 @@ bool Renderer::Tick(Level* CurrentLevel)
 		const std::vector<std::shared_ptr<Model>> Models = ActorOnLevel->GetActorsModels();
 		for (std::shared_ptr<Model> ActorsModel : Models)
 		{
-			GLint TexAddres = Globals::GetAssetManager()->GetTextureAddress(ActorsModel->GetTexturePath(), ActorsModel->GetTextureID());
+			AssetManager* AssetMan = Globals::GetAssetManager();
+			GLuint TexAddres = AssetMan->GetTextureAddress(ActorsModel->GetTexturePath(), ActorsModel->GetTextureID());
 			glBindTexture(GL_TEXTURE_2D, TexAddres);
-			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			std::pair<GLuint, unsigned int> MeshInfo = AssetMan->GetMeshAddressAndIndicesSize(ActorsModel->GetMeshPath(), ActorsModel->GetTextureID());
+			glBindVertexArray(MeshInfo.first);
+			glDrawElements(GL_TRIANGLES, MeshInfo.second, GL_UNSIGNED_INT, 0);
 		}
 	}
 

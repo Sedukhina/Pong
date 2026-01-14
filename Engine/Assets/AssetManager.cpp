@@ -2,63 +2,27 @@
 #include "Assets/Asset.h"
 #include "Log.h"
 
+#include <GL/glew.h>
+
+#include <assimp/Importer.hpp> 
+#include <assimp/postprocess.h> 
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-enum AssetType
+struct Vertex
 {
-	Texture,
-	Model,
-	None
+	float PositionX;
+	float PositionY;
+	float PositionZ;
+
+	float NormalX;
+	float NormalY;
+	float NormalZ;
+
+	float TextureCoordinateX;
+	float TextureCoordinateY;
 };
-
-#define STRING(x) #x
-#define TO_STRING(x) STRING(x)
-
-const std::vector<std::string> ModelsExtensions = { ".fbx", ".obj" };
-const std::vector<std::string> TexturesExtensions = { ".png", ".jpg" };
-
-// Helper function to choose correcrt loading path
-AssetType GetAssetType(std::filesystem::path path)
-{
-	std::string Extension = path.extension().string();
-	for (int i = 0; i < TexturesExtensions.size(); i++)
-	{
-		if (!Extension.compare(TexturesExtensions[i]))
-		{
-			return AssetType::Texture;
-		}
-	}
-	for (int i = 0; i < ModelsExtensions.size(); i++)
-	{
-		if (!Extension.compare(ModelsExtensions[i]))
-		{
-			return AssetType::Model;
-		}
-	}
-	return AssetType::None;
-}
-
-bool IsExistingPath(std::filesystem::path* path)
-{
-	// Checking path in case it's absolute
-	if (!std::filesystem::exists(path->string()))
-	{
-		// Checking path in case it's realtive tp engine asset dir
-		std::string root(TO_STRING(ASSETS_DIR));
-		std::filesystem::path AbsPath(root);
-		AbsPath += path->string();
-		if (!std::filesystem::exists(AbsPath))
-		{
-			LOG_ERROR("Provided path to asset doesn't exist: ");
-			LOG_ERROR(path->string().c_str());
-			LOG_ERROR(AbsPath.string().c_str());
-			return false;
-		}
-		path->swap(AbsPath);
-	}
-	return true;
-}
 
 const GLuint AssetManager::GetTextureAddress(std::filesystem::path path, uint64_t ID)
 {
@@ -68,18 +32,33 @@ const GLuint AssetManager::GetTextureAddress(std::filesystem::path path, uint64_
 	}
 	if (LoadedTextures.find(ID) == LoadedTextures.end())
 	{
-		LOG_WARNING("Provided path to asset doesn't exist: ");
+		LOG_WARNING("GLuint AssetManager::GetTextureAddress: Provided path to asset doesn't exist: ");
 		LOG_WARNING(path.string().c_str());
 		return 0;
 	}
 	return LoadedTextures[ID];
 }
 
+std::pair <const GLuint, const unsigned int> AssetManager::GetMeshAddressAndIndicesSize(std::filesystem::path path, uint64_t ID)
+{
+	if (LoadedMeshes.find(ID) == LoadedMeshes.end())
+	{
+		LoadAsset(path, ID);
+	}
+	if (LoadedMeshes.find(ID) == LoadedMeshes.end())
+	{
+		LOG_WARNING("GLuint AssetManager::GetMeshAddress: Provided path to asset doesn't exist: ");
+		LOG_WARNING(path.string().c_str());
+		return { 0, 0 };
+	}
+	return { LoadedMeshes[ID]->GetVAO(), LoadedMeshes[ID]->GetIndicesArraySize() };
+}
+
 void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
 {
 	if (!IsExistingPath(&path))
 	{
-		LOG_WARNING("Provided path to asset doesn't exist: ");
+		LOG_WARNING("AssetManager::LoadAsset: Provided path to asset doesn't exist: ");
 		LOG_WARNING(path.string().c_str());
 		return;
 	}
@@ -87,6 +66,10 @@ void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
 	if (Type == AssetType::Texture)
 	{
 		LoadTexture(path, ID);
+	}
+	else if (Type == AssetType::Model)
+	{
+		LoadModel(path, ID);
 	}
 	else
 	{
@@ -97,19 +80,22 @@ void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
 
 AssetManager::~AssetManager()
 {
-	/*for (const auto& [AssetID, AssetGLints] : LoadedMeshes)
+	for (const std::pair<const uint64_t, std::unique_ptr<Mesh>>& CurMesh : LoadedMeshes)
 	{
-		glDeleteVertexArrays(1, &AssetGLints[0]);
-		glDeleteBuffers(1, &AssetGLints[1]);
-		glDeleteBuffers(1, &AssetGLints[2]);
-	}*/
+		GLuint VAO = CurMesh.second->GetVAO();
+		glDeleteVertexArrays(1, &VAO);
+		GLuint VBO = CurMesh.second->GetVBO();
+		glDeleteBuffers(1, &VBO);
+		GLuint EBO = CurMesh.second->GetEBO();
+		glDeleteBuffers(1, &EBO);
+	}
 }
 	
 
 void AssetManager::LoadTexture(std::filesystem::path path, uint64_t ID)
 {
 	// Checking if texture already exists
-	auto TexturesIter = LoadedTextures.find(GetAssetID(path));
+	auto TexturesIter = LoadedTextures.find(ID);
 	if (TexturesIter != LoadedTextures.end())
 	{
 		char buffer[300];
@@ -155,8 +141,98 @@ void AssetManager::LoadTexture(std::filesystem::path path, uint64_t ID)
 	}
 
 	LoadedTextures[ID] = TextureLoc;
-	//std::vector<unsigned char> Img(Pixels, Pixels + Width * Height * Channels);
-	//CTexture Texture = CTexture(Path, AssetName, Img, Height, Width, Channels);
-	//Textures.emplace(Texture.GetAssetID(), std::make_unique<CTexture>(Texture));
-	//return Texture.GetAssetID();
+}
+
+void AssetManager::LoadModel(std::filesystem::path path, uint64_t ID)
+{
+	// Checking if model already exists
+	auto MeshesIter = LoadedMeshes.find(ID);
+	if (MeshesIter != LoadedMeshes.end())
+	{
+		char buffer[300];
+		sprintf(buffer, "Model (%s) is already loaded.", path.u8string().c_str());
+		LOG_INFO(buffer);
+	}
+
+	// Creating assimp importer to read scene from file
+	Assimp::Importer Import;
+	const aiScene* Scene = Import.ReadFile(path.string().c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_GenBoundingBoxes);
+
+	// Checking if loaded Models are valid
+	if (!Scene || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !Scene->mRootNode)
+	{
+		LOG_ERROR(Import.GetErrorString());
+		return;
+	}
+
+	LoadFromAssimpScene(Scene, ID);
+}
+
+void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)
+{
+	if (Scene->mNumMeshes == 0)
+	{
+		LOG_INFO("No meshes were found in provided model file");
+		return;
+	}
+	aiMesh* AiMesh = Scene->mMeshes[0];
+
+	std::vector<unsigned int> Indices;
+	Indices.reserve(3 * AiMesh->mNumFaces);
+	for (unsigned int i = 0; i < AiMesh->mNumFaces; i++)
+	{
+		aiFace face = AiMesh->mFaces[i];
+		for (unsigned int j = 0; j < face.mNumIndices; j++)
+			Indices.push_back(face.mIndices[j]);
+	}
+
+	// Vertices import
+	std::vector<Vertex> Vertices;
+	Vertices.reserve(AiMesh->mNumVertices);
+	for (unsigned int i = 0; i < AiMesh->mNumVertices; i++)
+	{
+		Vertex Vert;
+
+		Vert.PositionX = AiMesh->mVertices[i].x;
+		Vert.PositionY = AiMesh->mVertices[i].y;
+		Vert.PositionZ = AiMesh->mVertices[i].z;
+
+		Vert.NormalX = AiMesh->mNormals[i].x;
+		Vert.NormalX = AiMesh->mNormals[i].y;
+		Vert.NormalX = AiMesh->mNormals[i].z;
+
+		if (AiMesh->mTextureCoords[0])
+		{
+			Vert.TextureCoordinateX = AiMesh->mTextureCoords[0][i].x;
+			Vert.TextureCoordinateY = AiMesh->mTextureCoords[0][i].y;
+		}
+
+		Vertices.push_back(Vert);
+	}
+
+	GLuint VAO, VBO, EBO;
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(Vertex), &Vertices[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(unsigned int), &Indices[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, NormalX));
+
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TextureCoordinateX));
+
+	LoadedMeshes.emplace(ID, std::make_unique<Mesh>(VAO, VBO, EBO, Indices.size() * sizeof(unsigned int)));
+	glBindVertexArray(0);
 }

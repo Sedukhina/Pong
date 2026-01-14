@@ -21,6 +21,11 @@ target_link_libraries(Engine PUBLIC glm::glm)
 find_package(stb REQUIRED)
 target_include_directories(Engine PRIVATE ${stb_INCLUDE_DIRS})
 
+# Models/meshes loading lib
+find_package(assimp CONFIG REQUIRED)
+target_include_directories(Engine PRIVATE ${assimp_INCLUDE_DIRS})
+target_link_libraries(Engine PRIVATE assimp::assimp)
+
 # Enum to String lib for logger
 find_package(magic_enum CONFIG REQUIRED)
 target_link_libraries(Engine PRIVATE magic_enum::magic_enum)
