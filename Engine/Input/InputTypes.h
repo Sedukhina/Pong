@@ -43,5 +43,9 @@ enum InputKey
 	Y = 89,
 	Z = 90,
 	ESC = 256,
-	LAST_KEY_VALUE = ESC
+	RIGHT = 262,
+	LEFT = 263,
+	DOWN = 264, 
+	UP = 265,
+	LAST_KEY_VALUE = UP
 };

@@ -64,31 +64,14 @@ bool Renderer::InitRenderer()
 	// Setting camera
 	CameraMatrixLocation = CurrentShaderProgram->GetUniformLocation("CameraMatrix");
 	glm::mat4 ViewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, 10.0f));
-	glm::mat4 ProjectionMatrix = glm::ortho(-50.f, 50.f, -50.f, 50.f, -20.f, 20.f);
+	glm::mat4 ProjectionMatrix = glm::ortho(-ScreenHalfWidth, ScreenHalfWidth, -ScreenHalfHeight, ScreenHalfHeight, -20.f, 20.f);
 	CameraMatrix = ProjectionMatrix * ViewMatrix;
 	glUniformMatrix4fv(CameraMatrixLocation, 1, GL_FALSE, glm::value_ptr(CameraMatrix));
-
-
-	// IMPORTANT: TEST ONLY TRIANGLE
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // левая вершина
-		 0.5f, -0.5f, 0.0f, // правая вершина
-		 0.0f,  0.5f, 0.0f  // верхняя вершина   
-	};
-	
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	return true;
 }
 
-bool Renderer::Tick(Level* CurrentLevel)
+void Renderer::Tick(Level* CurrentLevel)
 {
 	glClearColor(0.05f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -114,7 +97,7 @@ bool Renderer::Tick(Level* CurrentLevel)
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 
-	return glfwWindowShouldClose(this->window);
+	// if glfwWindowShouldClose(this->window);
 }
 
 Renderer::~Renderer()

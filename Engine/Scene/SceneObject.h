@@ -19,6 +19,9 @@ public:
 
 
 protected:
+	void SetPosition(glm::vec3 newPosition);
+
+private:
 	void UpdateModelMatrix();
 
 	glm::vec3 Position;

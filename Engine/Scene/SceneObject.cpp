@@ -29,6 +29,12 @@ glm::vec3 SceneObject::GetPosition() const
 	return Position;
 }
 
+void SceneObject::SetPosition(glm::vec3 newPosition)
+{
+	Position = newPosition;
+	UpdateModelMatrix();
+}
+
 glm::quat SceneObject::GetRotation() const
 {
 	return Rotation;
@@ -57,9 +63,9 @@ void SceneObject::UpdateModelMatrix()
 	TranslationMatrix[1][1] = 1;
 	TranslationMatrix[2][2] = 1;
 	TranslationMatrix[3][3] = 1;
-	TranslationMatrix[3][0] = -Position.x;
-	TranslationMatrix[3][1] = -Position.y;
-	TranslationMatrix[3][2] = -Position.z;
+	TranslationMatrix[3][0] = Position.x;
+	TranslationMatrix[3][1] = Position.y;
+	TranslationMatrix[3][2] = Position.z;
 
 	float Qw_sqr = Rotation.w * Rotation.w;
 	float Qx_sqr = Rotation.x * Rotation.x;

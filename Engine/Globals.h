@@ -3,6 +3,10 @@
 #include "Input/InputManager.h"
 #include "Assets/AssetManager.h"
 
+// Used to define min/max screen coordinates
+const float ScreenHalfHeight = 50.f;
+const float ScreenHalfWidth = 50.f;
+
 class Globals
 {
 public:

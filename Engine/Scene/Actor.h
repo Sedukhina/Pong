@@ -13,6 +13,7 @@ public:
 
 	void AddModel(Model& newModel);
 	const std::vector<std::shared_ptr<Model>>& GetActorsModels() const;
+	void Move(glm::vec3 direction, float step);
 
 private:
 	std::vector<std::shared_ptr<Model>> ActorModels;
