@@ -5,9 +5,7 @@
 const std::vector<std::string> ModelsExtensions = { ".fbx", ".obj" };
 const std::vector<std::string> TexturesExtensions = { ".png", ".jpg" };
 
-// Asset folder path conversion from Cmake variable
-#define STRING(x) #x
-#define TO_STRING(x) STRING(x)
+std::string AssetDirRoot = "Assets/";
 
 uint64_t GetAssetID(std::filesystem::path path) 
 {
@@ -39,12 +37,9 @@ AssetType GetAssetType(std::filesystem::path path)
 
 bool IsExistingPath(std::filesystem::path* path)
 {
-	// Checking path in case it's absolute
 	if (!std::filesystem::exists(path->string()))
 	{
-		// Checking path in case it's realtive tp engine asset dir
-		std::string root(TO_STRING(ASSETS_DIR));
-		std::filesystem::path AbsPath(root);
+		std::filesystem::path AbsPath(AssetDirRoot);
 		AbsPath += path->string();
 		if (!std::filesystem::exists(AbsPath))
 		{

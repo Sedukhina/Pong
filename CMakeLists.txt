@@ -11,7 +11,7 @@ add_compile_definitions("BIN_ROOT=${CMAKE_BINARY_DIR}")
 set(PONG_SRC "Pong.cpp" "PlayerPlatform.cpp")
 add_executable(Pong ${PONG_SRC})
 
-set(ASSETS_DIR ${CMAKE_BINARY_DIR}/Assets)
+set(ASSETS_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/Assets)
 target_include_directories(Pong PUBLIC ${ASSETS_DIR})
 file(GLOB assets "Assets/*")
 
