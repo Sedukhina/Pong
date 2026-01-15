@@ -2,8 +2,6 @@
 #include "Assets/Asset.h"
 #include "Log.h"
 
-#include <GL/glew.h>
-
 #include <assimp/Importer.hpp> 
 #include <assimp/postprocess.h> 
 
@@ -233,6 +231,10 @@ void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TextureCoordinateX));
 
-	LoadedMeshes.emplace(ID, std::make_unique<Mesh>(VAO, VBO, EBO, Indices.size() * sizeof(unsigned int)));
+	LoadedMeshes.emplace(ID, 
+		std::make_unique<Mesh>(VAO, VBO, EBO, 
+			Indices.size() * sizeof(unsigned int), 
+			glm::vec2(AiMesh->mAABB.mMin.x, AiMesh->mAABB.mMin.y),
+			glm::vec2(AiMesh->mAABB.mMax.x, AiMesh->mAABB.mMax.y)));
 	glBindVertexArray(0);
 }

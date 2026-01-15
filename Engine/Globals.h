@@ -2,6 +2,7 @@
 
 #include "Input/InputManager.h"
 #include "Assets/AssetManager.h"
+#include "Scene/Level.h"
 
 // Used to define min/max screen coordinates
 const float ScreenHalfHeight = 50.f;
@@ -15,11 +16,14 @@ public:
 
 	static InputManager* GetInputManager();
 	static AssetManager* GetAssetManager();
+	static Level* GetLevel();
 
 	static void SetInputManager(InputManager* NewInputManagerPtr);
 	static void SetAssetManager(AssetManager* NewAssetManagerPtr);
+	static void SetLevel(Level* NewLevel);
 
 private:
 	inline static InputManager* CurrentInputManager = nullptr;
 	inline static AssetManager* CurrentAssetManager = nullptr;
+	inline static Level* CurrentLevel = nullptr;
 };

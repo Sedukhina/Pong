@@ -8,6 +8,8 @@ public:
 	~PlayerPlatform();
 
 protected:
+	float PlatformSpeed = 3.f;
+
 	InputKey MovePlatformUpKey;
 	InputKey MovePlatformDownKey;
 };

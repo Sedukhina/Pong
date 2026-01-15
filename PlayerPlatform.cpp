@@ -6,10 +6,8 @@ PlayerPlatform::PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3
 {
 	Model PlatformModel{ "DonutPainting.fbx", "Donut_tex.jpg" };
 	this->AddModel(PlatformModel);
-	Globals::GetInputManager()->BindInput(std::bind(&Actor::Move, this, glm::vec3(0.f, 1.f, 0.f), 1.f), MovePlatformUpKey, InputAction::PRESSED);
-	//Globals::GetInputManager()->BindInput(std::bind(&Actor::Move, this, glm::vec3(0.f, 1.f, 0.f), 1.f), MovePlatformUpKey, InputAction::REPEATED);
-	Globals::GetInputManager()->BindInput(std::bind(&Actor::Move, this, glm::vec3(0.f, 1.f, 0.f), -1.f), MovePlatformDownKey, InputAction::PRESSED);
-	//Globals::GetInputManager()->BindInput(std::bind(&Actor::Move, this, glm::vec3(0.f, 1.f, 0.f), -1.f), MovePlatformDownKey, InputAction::REPEATED);
+	Globals::GetInputManager()->BindInput(std::bind(&Actor::Move, this, glm::vec3(0.f, 1.f, 0.f), PlatformSpeed), MovePlatformUpKey, InputAction::PRESSED);
+	Globals::GetInputManager()->BindInput(std::bind(&Actor::Move, this, glm::vec3(0.f, 1.f, 0.f), -PlatformSpeed), MovePlatformDownKey, InputAction::PRESSED);
 }
 
 PlayerPlatform::~PlayerPlatform()

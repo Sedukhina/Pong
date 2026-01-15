@@ -23,10 +23,12 @@ Engine::~Engine()
 
 void Engine::Run(Level* CurrentLevel)
 {
+    Globals::SetLevel(CurrentLevel);
     while (!ShouldShutdown)
     {
-        CurrentRenderer->Tick(CurrentLevel);
+        CurrentRenderer->Tick();
     }
+    Globals::SetLevel(nullptr);
 }
 
 void Engine::SetShouldShutdownTrue()

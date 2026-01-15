@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include <glm/gtx/norm.hpp> 
+#include "Globals.h"
 
 Actor::Actor() :
 	SceneObject(glm::vec3(1.f), glm::vec3(0.f), glm::vec3(1.f))
@@ -30,7 +31,11 @@ void Actor::Move(glm::vec3 direction, float step)
 {
 	if (glm::length2(direction) < 1e-4f)
 		return;
-
 	direction = glm::normalize(direction);
-	SetPosition(GetPosition() + direction * step);
+	glm::vec3 NewPosition = GetPosition() + direction * step;
+
+	// TODO: Check collision
+
+
+	SetPosition(NewPosition);
 }

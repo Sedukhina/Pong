@@ -10,7 +10,7 @@ public:
 	Renderer();
 	bool InitRenderer();  
 	
-	void Tick(class Level* CurrentLevel);
+	void Tick();
 
 	~Renderer();
 

@@ -1,7 +1,7 @@
 #include "Assets/Mesh.h"
 
-Mesh::Mesh(GLuint vao, GLuint vbo, GLuint ebo, unsigned int indices) 
-	: VAO(vao), VBO(vbo), EBO(ebo), IndicesArraySize(indices)
+Mesh::Mesh(GLuint vao, GLuint vbo, GLuint ebo, unsigned int indices, glm::vec2 Min, glm::vec2 Max)
+	: VAO(vao), VBO(vbo), EBO(ebo), IndicesArraySize(indices), MinCoords(Min), MaxCoords(Max)
 {
 }
 
