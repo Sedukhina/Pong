@@ -52,6 +52,15 @@ std::pair <const GLuint, const unsigned int> AssetManager::GetMeshAddressAndIndi
 	return { LoadedMeshes[ID]->GetVAO(), LoadedMeshes[ID]->GetIndicesArraySize() };
 }
 
+std::array<glm::vec2, 2> AssetManager::GetMeshAABB(uint64_t ID) 
+{
+	if (LoadedMeshes.find(ID) == LoadedMeshes.end())
+	{
+		return std::array<glm::vec2, 2>();
+	}
+	return std::array<glm::vec2, 2>{LoadedMeshes[ID]->GetAABBMin(), LoadedMeshes[ID]->GetAABBMax()};
+}
+
 void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
 {
 	if (!IsExistingPath(&path))
@@ -187,6 +196,10 @@ void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)
 	// Vertices import
 	std::vector<Vertex> Vertices;
 	Vertices.reserve(AiMesh->mNumVertices);
+
+	glm::vec2 AABBmin (AiMesh->mVertices[0].x, AiMesh->mVertices[0].y);
+	glm::vec2 AABBmax (AiMesh->mVertices[0].x, AiMesh->mVertices[0].y);
+
 	for (unsigned int i = 0; i < AiMesh->mNumVertices; i++)
 	{
 		Vertex Vert;
@@ -194,10 +207,27 @@ void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)
 		Vert.PositionX = AiMesh->mVertices[i].x;
 		Vert.PositionY = AiMesh->mVertices[i].y;
 		Vert.PositionZ = AiMesh->mVertices[i].z;
+		
+		if (Vert.PositionX < AABBmin.x)
+		{
+			AABBmin.x = Vert.PositionX;
+		}
+		if (Vert.PositionX > AABBmax.x)
+		{
+			AABBmax.x = Vert.PositionX;
+		}
+		if (Vert.PositionY < AABBmin.y)
+		{
+			AABBmin.y = Vert.PositionY;
+		}
+		if (Vert.PositionY > AABBmax.y)
+		{
+			AABBmax.y = Vert.PositionY;
+		}
 
 		Vert.NormalX = AiMesh->mNormals[i].x;
-		Vert.NormalX = AiMesh->mNormals[i].y;
-		Vert.NormalX = AiMesh->mNormals[i].z;
+		Vert.NormalY = AiMesh->mNormals[i].y;
+		Vert.NormalZ = AiMesh->mNormals[i].z;
 
 		if (AiMesh->mTextureCoords[0])
 		{
@@ -234,7 +264,7 @@ void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)
 	LoadedMeshes.emplace(ID, 
 		std::make_unique<Mesh>(VAO, VBO, EBO, 
 			Indices.size() * sizeof(unsigned int), 
-			glm::vec2(AiMesh->mAABB.mMin.x, AiMesh->mAABB.mMin.y),
-			glm::vec2(AiMesh->mAABB.mMax.x, AiMesh->mAABB.mMax.y)));
+			glm::vec2(AiMesh->mAABB.mMin.x, AABBmin),
+			glm::vec2(AiMesh->mAABB.mMax.x, AABBmax)));
 	glBindVertexArray(0);
 }

@@ -25,3 +25,13 @@ const unsigned int Mesh::GetIndicesArraySize() const
 	return IndicesArraySize;
 }
 
+glm::vec2 Mesh::GetAABBMin() const
+{
+	return MinCoords;
+}
+
+glm::vec2 Mesh::GetAABBMax() const
+{
+	return MaxCoords;
+}
+

@@ -19,7 +19,8 @@ public:
 
 
 protected:
-	void SetPosition(glm::vec3 newPosition);
+	virtual void SetPosition(glm::vec3 newPosition);
+	virtual void OnTransformChanged();
 
 private:
 	void UpdateModelMatrix();

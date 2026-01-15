@@ -1,7 +1,7 @@
 #pragma once
 #include <filesystem>
 
-enum AssetType
+enum class AssetType
 {
 	Texture,
 	Model,

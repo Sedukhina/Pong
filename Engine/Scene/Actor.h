@@ -17,13 +17,15 @@ public:
 	~Actor();
 
 	void AddModel(Model& newModel);
+	void AddCollision(std::shared_ptr<fcl::CollisionGeometryf> collision);
 	const std::vector<std::shared_ptr<Model>>& GetActorsModels() const;
-	void Move(glm::vec3 direction, float step);
-	
-	virtual void OnCollision(Actor* OtherActor) {};
+
+	// Checks only wall collision
+	virtual void SetPosition(glm::vec3 newPosition) override;
+	virtual void OnTransformChanged() override;
 
 private:
 	std::vector<std::shared_ptr<Model>> ActorModels;
-	std::shared_ptr<fcl::CollisionGeometryd> ActorCollision;
+	std::shared_ptr<fcl::CollisionObjectf> ActorCollision;
 };
 

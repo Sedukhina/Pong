@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <map>
 #include <memory>
+#include <array>
 #include "Mesh.h"
 
 class AssetManager
@@ -12,6 +13,7 @@ public:
 	
 	const GLuint GetTextureAddress(std::filesystem::path path, uint64_t ID);
 	std::pair<const GLuint, const unsigned int> GetMeshAddressAndIndicesSize(std::filesystem::path path, uint64_t ID);
+	std::array<glm::vec2, 2> GetMeshAABB(uint64_t ID);
 
 	void LoadAsset(std::filesystem::path path, uint64_t ID);
 

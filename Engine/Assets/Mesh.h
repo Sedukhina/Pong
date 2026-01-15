@@ -13,6 +13,9 @@ public:
 	const GLuint GetEBO() const;
 	const unsigned int GetIndicesArraySize() const;
 
+	glm::vec2 GetAABBMin() const;
+	glm::vec2 GetAABBMax() const;
+
 private:
 	glm::vec2 MinCoords;
 	glm::vec2 MaxCoords;
