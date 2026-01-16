@@ -24,6 +24,8 @@ bool Renderer::InitRenderer()
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	//window = glfwCreateWindow(mode->width, mode->height, "Engine", glfwGetPrimaryMonitor(), nullptr);
 	window = glfwCreateWindow((int)(mode->width * 0.8f), (int)(mode->height * 0.8f), "Pong", nullptr, nullptr);
+	Globals::SetScreenRatio((float)mode->width / (float)mode->height);
+
 	if (window == nullptr)
 	{
 		LOG_FATAL("Failed to create GLFW window");
@@ -64,7 +66,7 @@ bool Renderer::InitRenderer()
 	// Setting camera
 	CameraMatrixLocation = CurrentShaderProgram->GetUniformLocation("CameraMatrix");
 	glm::mat4 ViewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, 10.0f));
-	glm::mat4 ProjectionMatrix = glm::ortho(-ScreenHalfWidth, ScreenHalfWidth, -ScreenHalfHeight, ScreenHalfHeight, -20.f, 20.f);
+	glm::mat4 ProjectionMatrix = glm::ortho(-Globals::GetScreenHalfWidth(), Globals::GetScreenHalfWidth(), -Globals::GetScreenHalfHeight(), Globals::GetScreenHalfHeight(), -20.f, 20.f);
 	CameraMatrix = ProjectionMatrix * ViewMatrix;
 	glUniformMatrix4fv(CameraMatrixLocation, 1, GL_FALSE, glm::value_ptr(CameraMatrix));
 
@@ -93,9 +95,10 @@ void Renderer::Tick(float DeltaTime)
 			AssetManager* AssetMan = Globals::GetAssetManager();
 			GLuint TexAddres = AssetMan->GetTextureAddress(ActorsModel->GetTexturePath(), ActorsModel->GetTextureID());
 			glBindTexture(GL_TEXTURE_2D, TexAddres);
-			std::pair<GLuint, unsigned int> MeshInfo = AssetMan->GetMeshAddressAndIndicesSize(ActorsModel->GetMeshPath(), ActorsModel->GetTextureID());
+			std::pair<GLuint, unsigned int> MeshInfo = AssetMan->GetMeshAddressAndIndicesSize(ActorsModel->GetMeshPath(), ActorsModel->GetMeshID());
 			glBindVertexArray(MeshInfo.first);
-			glDrawElements(GL_TRIANGLES, MeshInfo.second, GL_UNSIGNED_INT, 0);
+
+			glDrawElements(AssetMan->GetMeshDrawingMode(ActorsModel->GetMeshID()), MeshInfo.second, GL_UNSIGNED_INT, 0);
 		}
 	}
 

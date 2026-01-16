@@ -30,3 +30,18 @@ void Globals::SetLevel(Level* NewLevel)
 	CurrentLevel = NewLevel;
 }
 
+const float Globals::GetScreenHalfWidth()
+{
+	return ScreenHalfWidth;
+}
+
+const float Globals::GetScreenHalfHeight()
+{
+	return ScreenHalfHeight;
+}
+
+void Globals::SetScreenRatio(float ScreenRation)
+{
+	ScreenHalfHeight /= ScreenRation;
+}
+

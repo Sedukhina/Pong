@@ -1,7 +1,7 @@
 #include "AssetManager.h"
 #include "Assets/Asset.h"
 #include "Log.h"
-#include "Vertex.h"
+#include "Generated.h"
 
 #include <assimp/Importer.hpp> 
 #include <assimp/postprocess.h> 
@@ -52,12 +52,22 @@ std::array<glm::vec2, 2> AssetManager::GetMeshAABB(std::filesystem::path path, u
 	return std::array<glm::vec2, 2>{LoadedMeshes[ID]->GetAABBMin(), LoadedMeshes[ID]->GetAABBMax()};
 }
 
+GLenum AssetManager::GetMeshDrawingMode(uint64_t ID)
+{
+	if (LoadedMeshes.find(ID) == LoadedMeshes.end())
+	{
+		return GL_TRIANGLES;
+	}
+	return LoadedMeshes[ID]->GetDrawingMode();
+}
+
 void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
 {
 	AssetType Type = GetAssetType(path);
 	if (Type == AssetType::GeneratedMesh)
 	{
-
+		LoadGeneratedMesh(path, ID);
+		return;
 	}
 	if (!IsExistingPath(&path))
 	{
@@ -172,8 +182,13 @@ void AssetManager::LoadModel(std::filesystem::path path, uint64_t ID)
 
 void AssetManager::LoadGeneratedMesh(std::filesystem::path path, uint64_t ID)
 {
-	std::vector<Vertex> Vertices;
-	std::vector<unsigned int> Indices;
+	glm::vec2 AABBMin;
+	glm::vec2 AABBMax;
+	GLenum DrawingMode;
+
+	std::pair<std::vector<Vertex>, std::vector<unsigned int>> VerticesAndIndices = GenerateVerticesAndIndices(path, &AABBMin, &AABBMax, &DrawingMode);
+
+	LoadMeshToVideomemory(VerticesAndIndices.first, VerticesAndIndices.second, AABBMin, AABBMax, ID, DrawingMode);
 }
 
 void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)
@@ -219,6 +234,11 @@ void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)
 		Vertices.push_back(Vert);
 	}
 
+	LoadMeshToVideomemory(Vertices, Indices, glm::vec2(AiMesh->mAABB.mMin.x, AiMesh->mAABB.mMin.y), glm::vec2(AiMesh->mAABB.mMax.x, AiMesh->mAABB.mMax.y), ID);
+}
+
+void AssetManager::LoadMeshToVideomemory(std::vector<Vertex>& Vertices, std::vector<unsigned int>& Indices, glm::vec2 AABBmin, glm::vec2 AABBmax, uint64_t ID, GLenum DrawingMode)
+{
 	GLuint VAO, VBO, EBO;
 
 	glGenVertexArrays(1, &VAO);
@@ -242,10 +262,12 @@ void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TextureCoordinateX));
 
-	LoadedMeshes.emplace(ID, 
-		std::make_unique<Mesh>(VAO, VBO, EBO, 
-			Indices.size() * sizeof(unsigned int), 
-			glm::vec2(AiMesh->mAABB.mMin.x, AiMesh->mAABB.mMin.y),
-			glm::vec2(AiMesh->mAABB.mMax.x, AiMesh->mAABB.mMax.y)));
+	LoadedMeshes.emplace(ID,
+		std::make_unique<Mesh>(VAO, VBO, EBO,
+			Indices.size() * sizeof(unsigned int),
+			AABBmin,
+			AABBmax));
+
+	LoadedMeshes[ID]->SetDrawingMode(DrawingMode);
 	glBindVertexArray(0);
 }

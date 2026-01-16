@@ -45,6 +45,9 @@ void Actor::SetPosition(glm::vec3 newPosition)
 		glm::vec3 Diff = newPosition - GetPosition();
 		fcl::AABBf ActorColisionAABB =  ActorCollision->getAABB();
 
+		float ScreenHalfWidth = Globals::GetScreenHalfWidth();
+		float ScreenHalfHeight = Globals::GetScreenHalfHeight();
+
 		if (ActorColisionAABB.min_.x() + Diff.x <= -ScreenHalfWidth)
 		{
 			newPosition.x = -ScreenHalfWidth + (GetPosition().x - ActorColisionAABB.min_.x());

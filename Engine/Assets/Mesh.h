@@ -16,7 +16,12 @@ public:
 	glm::vec2 GetAABBMin() const;
 	glm::vec2 GetAABBMax() const;
 
+	void SetDrawingMode(GLenum NewDrawingMode);
+	GLenum GetDrawingMode() const;
+
 private:
+	GLenum DrawingMode = GL_TRIANGLES;
+
 	glm::vec2 MinCoords;
 	glm::vec2 MaxCoords;
 

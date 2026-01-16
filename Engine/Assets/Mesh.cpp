@@ -35,3 +35,14 @@ glm::vec2 Mesh::GetAABBMax() const
 	return MaxCoords;
 }
 
+void Mesh::SetDrawingMode(GLenum NewDrawingMode)
+{
+	DrawingMode = NewDrawingMode;
+}
+
+GLenum Mesh::GetDrawingMode() const
+{
+	return DrawingMode;
+}
+
+

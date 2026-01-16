@@ -4,10 +4,6 @@
 #include "Assets/AssetManager.h"
 #include "Scene/Level.h"
 
-// Used to define min/max screen coordinates
-const float ScreenHalfHeight = 50.f;
-const float ScreenHalfWidth = 50.f;
-
 class Globals
 {
 public:
@@ -22,8 +18,16 @@ public:
 	static void SetAssetManager(AssetManager* NewAssetManagerPtr);
 	static void SetLevel(Level* NewLevel);
 
+	static const float GetScreenHalfWidth();
+	static const float GetScreenHalfHeight();
+	static void SetScreenRatio(float ScreenRation);
+
 private:
 	inline static InputManager* CurrentInputManager = nullptr;
 	inline static AssetManager* CurrentAssetManager = nullptr;
 	inline static Level* CurrentLevel = nullptr;
+
+	// Used to define min/max screen coordinates
+	inline static const float ScreenHalfWidth = 50.f;
+	inline static float ScreenHalfHeight = 50.f;
 };
