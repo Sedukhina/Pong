@@ -5,6 +5,7 @@ enum class AssetType
 {
 	Texture,
 	Model,
+	GeneratedMesh,
 	None
 };
 

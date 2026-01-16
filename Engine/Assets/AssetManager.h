@@ -22,6 +22,7 @@ public:
 private:
 	void LoadTexture(std::filesystem::path path, uint64_t ID);
 	void LoadModel(std::filesystem::path path, uint64_t ID);
+	void LoadGeneratedMesh(std::filesystem::path path, uint64_t ID);
 	// Returns if anything was loaded
 	void LoadFromAssimpScene(const aiScene* Scene, uint64_t ID);
 

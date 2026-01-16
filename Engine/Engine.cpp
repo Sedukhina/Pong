@@ -4,6 +4,7 @@
 #include "Assets/AssetManager.h"
 #include "Globals.h"
 #include "Log.h"
+#include <time.h>
 
 Engine::Engine()
 {
@@ -23,10 +24,14 @@ Engine::~Engine()
 
 void Engine::Run(Level* CurrentLevel)
 {
+    clock_t LastFrame = clock();;
     Globals::SetLevel(CurrentLevel);
     while (!ShouldShutdown)
     {
-        CurrentRenderer->Tick();
+        clock_t DeltaTime = clock() - LastFrame + 1;
+        CurrentLevel->Tick(DeltaTime);
+        CurrentRenderer->Tick(DeltaTime);
+        LastFrame = clock();
     }
     Globals::SetLevel(nullptr);
 }

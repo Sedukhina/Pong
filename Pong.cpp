@@ -3,6 +3,7 @@
 #include "Engine/Scene/Actor.h"
 
 #include "PlayerPlatform.h"
+#include "Ball.h"
 
 int main()
 {
@@ -12,6 +13,8 @@ int main()
     std::shared_ptr<PlayerPlatform> Player2 = std::make_shared<PlayerPlatform>(glm::vec3(-40.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.5f, 10.f, 1.f), InputKey::W, InputKey::S);
     PongLevel.AddActorOnLevel(Player1);
     PongLevel.AddActorOnLevel(Player2);
+    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(5.f, 3.f);
+    PongLevel.AddActorOnLevel(PongBall);
     Eng.Run(&PongLevel);
     return 0;
 }

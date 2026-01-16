@@ -1,5 +1,5 @@
 #include "Asset.h"
-
+#include "Generated.h"
 #include "Log.h"
 
 const std::vector<std::string> ModelsExtensions = { ".fbx", ".obj" };
@@ -9,7 +9,10 @@ std::string AssetDirRoot = "Assets/";
 
 uint64_t GetAssetID(std::filesystem::path path) 
 {
-	IsExistingPath(&path);
+	if (GetAssetType(path) != AssetType::GeneratedMesh)
+	{
+		IsExistingPath(&path);
+	}
 	uint64_t AssetID = std::hash<std::filesystem::path>{}(path.string());
 	return AssetID;
 }
@@ -31,6 +34,10 @@ AssetType GetAssetType(std::filesystem::path path)
 		{
 			return AssetType::Model;
 		}
+	}
+	if (!Extension.compare(GeneratedMeshExtension))
+	{
+		return AssetType::GeneratedMesh;
 	}
 	return AssetType::None;
 }

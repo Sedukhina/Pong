@@ -1,26 +1,13 @@
 #include "AssetManager.h"
 #include "Assets/Asset.h"
 #include "Log.h"
+#include "Vertex.h"
 
 #include <assimp/Importer.hpp> 
 #include <assimp/postprocess.h> 
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
-struct Vertex
-{
-	float PositionX;
-	float PositionY;
-	float PositionZ;
-
-	float NormalX;
-	float NormalY;
-	float NormalZ;
-
-	float TextureCoordinateX;
-	float TextureCoordinateY;
-};
 
 const GLuint AssetManager::GetTextureAddress(std::filesystem::path path, uint64_t ID)
 {
@@ -67,13 +54,17 @@ std::array<glm::vec2, 2> AssetManager::GetMeshAABB(std::filesystem::path path, u
 
 void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
 {
+	AssetType Type = GetAssetType(path);
+	if (Type == AssetType::GeneratedMesh)
+	{
+
+	}
 	if (!IsExistingPath(&path))
 	{
 		LOG_WARNING("AssetManager::LoadAsset: Provided path to asset doesn't exist: ");
 		LOG_WARNING(path.string().c_str());
 		return;
 	}
-	AssetType Type = GetAssetType(path);
 	if (Type == AssetType::Texture)
 	{
 		LoadTexture(path, ID);
@@ -177,6 +168,12 @@ void AssetManager::LoadModel(std::filesystem::path path, uint64_t ID)
 	}
 
 	LoadFromAssimpScene(Scene, ID);
+}
+
+void AssetManager::LoadGeneratedMesh(std::filesystem::path path, uint64_t ID)
+{
+	std::vector<Vertex> Vertices;
+	std::vector<unsigned int> Indices;
 }
 
 void AssetManager::LoadFromAssimpScene(const aiScene* Scene, uint64_t ID)

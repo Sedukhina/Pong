@@ -10,7 +10,7 @@ public:
 	Renderer();
 	bool InitRenderer();  
 	
-	void Tick();
+	void Tick(float DeltaTime);
 
 	~Renderer();
 

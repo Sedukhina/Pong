@@ -8,6 +8,14 @@ Level::~Level()
 {
 }
 
+void Level::Tick(float DeltaTime)
+{
+	for (std::shared_ptr<Actor> ActorOnLevel : ActorsOnLevel)
+	{
+		ActorOnLevel->Tick(DeltaTime);
+	}
+}
+
 void Level::AddActorOnLevel(std::shared_ptr<Actor> actor)
 {
 	ActorsOnLevel.push_back(actor);

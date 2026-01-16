@@ -1,0 +1,18 @@
+#include "Ball.h"
+#include "Engine/Assets/Generated.h"
+#include "Engine/Log.h"
+#include <random>
+
+Ball::Ball(float radius, float speed)
+	: Speed(speed)
+{
+	static std::random_device RandomDevice;
+	static std::mt19937 Generator(RandomDevice());
+	static std::uniform_real_distribution<float> Distribution(-1.0f, 1.0f);
+	Direction = glm::normalize(glm::vec2(Distribution(Generator), Distribution(Generator)));
+	std::filesystem::path MeshPath = GeneratePathForCircle(radius, Segments);
+}
+
+void Ball::Tick(float DeltaTime)
+{
+}

@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_compile_definitions("BIN_ROOT=${CMAKE_BINARY_DIR}")
 
-set(PONG_SRC "Pong.cpp" "PlayerPlatform.cpp")
+file(GLOB PONG_SRC "*.h" "*.cpp")
 add_executable(Pong ${PONG_SRC})
 
 set(ASSETS_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/Assets)

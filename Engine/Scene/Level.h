@@ -10,6 +10,8 @@ public:
 	Level();
 	~Level();
 
+	void Tick(float DeltaTime);
+
 	void AddActorOnLevel(std::shared_ptr<Actor> actor);
 	const std::vector<std::shared_ptr<Actor>>& GetActorsOnLevel() const;
 

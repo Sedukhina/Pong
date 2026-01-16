@@ -71,7 +71,7 @@ bool Renderer::InitRenderer()
 	return true;
 }
 
-void Renderer::Tick()
+void Renderer::Tick(float DeltaTime)
 {
 	Level* CurrentLevel = Globals::GetLevel();
 	if (!CurrentLevel)
