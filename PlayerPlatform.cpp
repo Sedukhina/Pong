@@ -11,14 +11,10 @@ PlayerPlatform::PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3
 	std::string MeshPath = "DonutPainting.fbx";
 	Model PlatformModel{ MeshPath, "Donut_tex.jpg" };
 	this->AddModel(PlatformModel);
-	// Setting collision
-	std::array<glm::vec2, 2> AABB = Globals::GetAssetManager()->GetMeshAABB(GetAssetID(MeshPath));
 
-	char buffer[300];
-	//sprintf(buffer, "AABB min x is %f\nAABB min y is %f", AABB[0].x, AABB[0].y);
-	sprintf(buffer, "AABB min x is %f\nAABB min y is %f", 5.f, 5.f);
-	LOG_DEBUG(buffer);
-	std::shared_ptr<fcl::Boxf> CollsionBox = std::make_shared<fcl::Boxf>(AABB[1].x - AABB[0].x, AABB[1].y - AABB[0].y, 0.f);
+	// Setting collision
+	std::array<glm::vec2, 2> AABB = Globals::GetAssetManager()->GetMeshAABB(MeshPath, GetAssetID(MeshPath));
+	std::shared_ptr<fcl::Boxf> CollsionBox = std::make_shared<fcl::Boxf>(GetScale().x * (AABB[1].x - AABB[0].x), GetScale().y * (AABB[1].y - AABB[0].y), GetScale().z);
 	this->AddCollision(CollsionBox);
 
 	// Binding input
