@@ -13,7 +13,7 @@ int main()
     std::shared_ptr<PlayerPlatform> Player2 = std::make_shared<PlayerPlatform>(glm::vec3(-44.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 4.f, 1.f), InputKey::W, InputKey::S);
     PongLevel.AddActorOnLevel(Player1);
     PongLevel.AddActorOnLevel(Player2);
-    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 2.f);
+    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 0.03f);
     PongLevel.AddActorOnLevel(PongBall);
     Eng.Run(&PongLevel);
     return 0;

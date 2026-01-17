@@ -33,5 +33,28 @@ void PlayerPlatform::MovePlatform(glm::vec3 direction, float step)
 	direction = glm::normalize(direction);
 	glm::vec3 NewPosition = GetPosition() + direction * step;
 
+	glm::vec3 Diff = NewPosition - GetPosition();
+	fcl::AABBf ActorColisionAABB = GetActorCollision()->getAABB();
+
+	float ScreenHalfWidth = Globals::GetScreenHalfWidth();
+	float ScreenHalfHeight = Globals::GetScreenHalfHeight();
+
+	if (ActorColisionAABB.min_.x() + Diff.x <= -ScreenHalfWidth)
+	{
+		NewPosition.x = -ScreenHalfWidth + (GetPosition().x - ActorColisionAABB.min_.x());
+	}
+	else if (ActorColisionAABB.max_.x() + Diff.x >= ScreenHalfWidth)
+	{
+		NewPosition.x = ScreenHalfWidth - (ActorColisionAABB.max_.x() - GetPosition().x);
+	}
+	if (ActorColisionAABB.min_.y() + Diff.y <= -ScreenHalfHeight)
+	{
+		NewPosition.y = -ScreenHalfHeight + (GetPosition().y - ActorColisionAABB.min_.y());
+	}
+	else if (ActorColisionAABB.max_.y() + Diff.y >= ScreenHalfHeight)
+	{
+		NewPosition.y = ScreenHalfHeight - (ActorColisionAABB.max_.y() - GetPosition().y);
+	}
+
 	SetPosition(NewPosition);
 }

@@ -20,7 +20,9 @@ public:
 
 	void AddModel(Model& newModel);
 	void AddCollision(std::shared_ptr<fcl::CollisionGeometryf> collision);
+
 	const std::vector<std::shared_ptr<Model>>& GetActorsModels() const;
+	const std::shared_ptr<fcl::CollisionObjectf>& GetActorCollision() const;
 
 	// Checks only wall collision
 	virtual void SetPosition(glm::vec3 newPosition) override;

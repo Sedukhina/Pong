@@ -24,7 +24,7 @@ Engine::~Engine()
 
 void Engine::Run(Level* CurrentLevel)
 {
-    clock_t LastFrame = clock();;
+    clock_t LastFrame = clock();
     Globals::SetLevel(CurrentLevel);
     while (!ShouldShutdown)
     {

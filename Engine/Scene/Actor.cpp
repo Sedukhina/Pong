@@ -37,34 +37,15 @@ const std::vector<std::shared_ptr<Model>>& Actor::GetActorsModels() const
 	return ActorModels;
 }
 
+const std::shared_ptr<fcl::CollisionObjectf>& Actor::GetActorCollision() const
+{
+	return ActorCollision;
+}
+
 void Actor::SetPosition(glm::vec3 newPosition)
 {
-	// Wall collision
 	if (ActorCollision)
 	{
-		glm::vec3 Diff = newPosition - GetPosition();
-		fcl::AABBf ActorColisionAABB =  ActorCollision->getAABB();
-
-		float ScreenHalfWidth = Globals::GetScreenHalfWidth();
-		float ScreenHalfHeight = Globals::GetScreenHalfHeight();
-
-		if (ActorColisionAABB.min_.x() + Diff.x <= -ScreenHalfWidth)
-		{
-			newPosition.x = -ScreenHalfWidth + (GetPosition().x - ActorColisionAABB.min_.x());
-		}
-		else if (ActorColisionAABB.max_.x() + Diff.x >= ScreenHalfWidth)
-		{
-			newPosition.x = ScreenHalfWidth - (ActorColisionAABB.max_.x() - GetPosition().x);
-		}
-		if (ActorColisionAABB.min_.y() + Diff.y <= -ScreenHalfHeight)
-		{
-			newPosition.y = -ScreenHalfWidth + (GetPosition().y - ActorColisionAABB.min_.y());
-		}
-		else if (ActorColisionAABB.max_.y() + Diff.y >= ScreenHalfWidth)
-		{
-			newPosition.y = ScreenHalfWidth - (ActorColisionAABB.max_.y() - GetPosition().y);
-		}
-
 		ActorCollision->setTranslation(fcl::Vector3f(newPosition.x, newPosition.y, newPosition.z));
 	}
 	SceneObject::SetPosition(newPosition);
