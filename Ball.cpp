@@ -163,7 +163,20 @@ void Ball::CheckCollisionWithActors(const std::vector<std::shared_ptr<Actor>>& A
 		{
 			continue;
 		}
-		// TODO
+		fcl::ContinuousCollisionRequestf Request;
+		fcl::ContinuousCollisionResultf Result;
+
+		const fcl::Vector3f StartTranslation = GetActorCollision()->getTransform().translation();
+		fcl::Vector3f EndTranslation = StartTranslation + fcl::Vector3f(Direction.x * Step, Direction.y * Step, 0);
+		fcl::Quaternionf EndRotation = GetActorCollision()->getQuatRotation();
+		fcl::Transform3f EndTransform = GetActorCollision()->getTransform();
+
+		fcl::Transform3f OtherActorTransform = OtherActorCollision->getTransform();
+		fcl::continuousCollide(GetActorCollision().get(),
+		  EndTransform,
+		  OtherActorCollision.get(),
+		  OtherActorTransform,
+		  Request, Result);
 	}
 	return;
 }

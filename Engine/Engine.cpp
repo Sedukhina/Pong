@@ -29,7 +29,7 @@ void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
     clock_t DeltaTime = 0;
     Globals::SetLevel(CurrentLevel);
     CurrentGameState->BindFunctionOnEndgame(std::bind(&Globals::SetTimeFreezed, true));
-    while (!ShouldShutdown)
+    while (!ShouldShutdown && !CurrentRenderer->GetWindowShouldCLose())
     {
         if (!Globals::GetTimeFreezed())
         {

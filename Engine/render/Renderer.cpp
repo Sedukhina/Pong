@@ -2,7 +2,6 @@
 #include "ShaderProgram.h"
 #include "InputCallback.h"
 #include "Log.h"
-#include "Scene/Level.h"
 #include "Assets/Model.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -83,6 +82,26 @@ void Renderer::Tick(float DeltaTime)
 	glClearColor(0.05f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	RenderModels(DeltaTime, CurrentLevel);
+	
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+}
+
+bool Renderer::GetWindowShouldCLose()
+{
+	return glfwWindowShouldClose(window);
+}
+
+Renderer::~Renderer()
+{
+	glfwSetWindowShouldClose(window, GL_TRUE);
+	glfwDestroyWindow(window);
+	glfwTerminate();
+}
+
+void Renderer::RenderModels(float DeltaTime, Level* CurrentLevel)
+{
 	const std::vector<std::shared_ptr<Actor>> ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
 	for (std::shared_ptr<Actor> ActorOnLevel : ActorsOnLevel)
 	{
@@ -101,16 +120,4 @@ void Renderer::Tick(float DeltaTime)
 			glDrawElements(AssetMan->GetMeshDrawingMode(ActorsModel->GetMeshID()), MeshInfo.second, GL_UNSIGNED_INT, 0);
 		}
 	}
-
-	glfwSwapBuffers(window);
-	glfwPollEvents();
-
-	// if glfwWindowShouldClose(this->window);
-}
-
-Renderer::~Renderer()
-{
-	glfwSetWindowShouldClose(window, GL_TRUE);
-	glfwDestroyWindow(this->window);
-	glfwTerminate();
 }

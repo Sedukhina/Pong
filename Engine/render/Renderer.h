@@ -11,10 +11,13 @@ public:
 	bool InitRenderer();  
 	
 	void Tick(float DeltaTime);
+	bool GetWindowShouldCLose();
 
 	~Renderer();
 
 private:
+	void RenderModels(float DeltaTime, class Level* CurrentLevel);
+
 	GLFWwindow* window;
 
 	float ScreenRatio;
