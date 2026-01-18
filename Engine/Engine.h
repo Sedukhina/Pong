@@ -2,6 +2,7 @@
 // For smart pointers
 #include <memory>
 #include "Scene/Level.h"
+#include "GameState.h"
 
 class Engine
 {
@@ -9,12 +10,11 @@ public:
     Engine();
     ~Engine();
 
-    void Run(Level* CurrentLevel);
+    void Run(Level* CurrentLevel, GameState* CurrentGameState);
 
     void SetShouldShutdownTrue();
 
 protected:
-
     std::unique_ptr<class Renderer> CurrentRenderer;
 
     std::shared_ptr<class InputManager> CurrentInputManager;

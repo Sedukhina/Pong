@@ -3,12 +3,16 @@
 #include "Input/InputManager.h"
 #include "Assets/AssetManager.h"
 #include "Scene/Level.h"
+#include <GameState.h>
 
 class Globals
 {
 public:
 	Globals() {};
 	~Globals() {};
+
+	static void SetTimeFreezed(bool NewValue);
+	static bool GetTimeFreezed();
 
 	static InputManager* GetInputManager();
 	static AssetManager* GetAssetManager();
@@ -23,6 +27,8 @@ public:
 	static void SetScreenRatio(float ScreenRation);
 
 private:
+	inline static bool TimeFreezed = false;
+
 	inline static InputManager* CurrentInputManager = nullptr;
 	inline static AssetManager* CurrentAssetManager = nullptr;
 	inline static Level* CurrentLevel = nullptr;

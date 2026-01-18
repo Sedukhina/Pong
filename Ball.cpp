@@ -8,11 +8,6 @@
 Ball::Ball(float radius, float speed)
 	: Speed(speed), Radius(radius)
 {
-	static std::random_device RandomDevice;
-	static std::mt19937 Generator(RandomDevice());
-	static std::uniform_real_distribution<float> Distribution(-1.0f, 1.0f);
-	Direction = glm::normalize(glm::vec3(Distribution(Generator), Distribution(Generator), 0.f));
-
 	std::filesystem::path MeshPath = GeneratePathForCircle(radius, Segments);
 	Model PlatformModel{ MeshPath, "ink.jpg" };
 
@@ -22,6 +17,13 @@ Ball::Ball(float radius, float speed)
 	this->AddCollision(CollsionSphere);
 
 	this->AddModel(PlatformModel);
+
+	StartRound();
+}
+
+void Ball::BindFunctionOnEndRound(std::function<void(int)> func)
+{
+	OnRoundEndBindedFunctions.push_back(func);
 }
 
 void Ball::Tick(float DeltaTime)
@@ -33,6 +35,25 @@ void Ball::Tick(float DeltaTime)
 	}
 	const std::vector<std::shared_ptr<Actor>> ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
 	MoveBall(ActorsOnLevel, Speed * DeltaTime);
+}
+
+void Ball::StartRound()
+{
+	SetPosition(glm::vec3(0.f));
+
+	static std::random_device RandomDevice;
+	static std::mt19937 Generator(RandomDevice());
+	static std::uniform_real_distribution<float> Distribution(-1.0f, 1.0f);
+	Direction = glm::normalize(glm::vec3(Distribution(Generator), Distribution(Generator), 0.f));
+}
+
+void Ball::EndRound(bool Player)
+{
+	for (std::function<void(int)> EndGameFunction : OnRoundEndBindedFunctions)
+	{
+		std::invoke(EndGameFunction, Player);
+	}
+	StartRound();
 }
 
 void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, float Step)
@@ -59,7 +80,11 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 		{
 			NewPosition += Direction * WallDistance;
 			Step -= WallDistance;
-			if (Directions[0]) { Direction.x = -Direction.x; };
+			if (Directions[0]) 
+			{ 
+				EndRound(Direction.y > 0); 
+				return;
+			};
 			if (Directions[1]) { Direction.y = -Direction.y; };
 		}
 	}

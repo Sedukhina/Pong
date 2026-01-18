@@ -22,13 +22,23 @@ Engine::~Engine()
 
 }
 
-void Engine::Run(Level* CurrentLevel)
+void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
 {
+    Globals::SetTimeFreezed(false);
     clock_t LastFrame = clock();
+    clock_t DeltaTime = 0;
     Globals::SetLevel(CurrentLevel);
+    CurrentGameState->BindFunctionOnEndgame(std::bind(&Globals::SetTimeFreezed, true));
     while (!ShouldShutdown)
     {
-        clock_t DeltaTime = clock() - LastFrame + 1;
+        if (!Globals::GetTimeFreezed())
+        {
+            DeltaTime = clock() - LastFrame + 1;
+        }
+        else
+        {
+            DeltaTime = 0;
+        }
         CurrentLevel->Tick(DeltaTime);
         CurrentRenderer->Tick(DeltaTime);
         LastFrame = clock();
@@ -40,3 +50,4 @@ void Engine::SetShouldShutdownTrue()
 {
     ShouldShutdown = true;
 }
+

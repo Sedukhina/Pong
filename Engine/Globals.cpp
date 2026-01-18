@@ -1,5 +1,15 @@
 #include "Globals.h"
 
+void Globals::SetTimeFreezed(bool NewValue)
+{
+	TimeFreezed = NewValue;
+}
+
+bool Globals::GetTimeFreezed()
+{
+	return TimeFreezed;
+}
+
 InputManager* Globals::GetInputManager()
 {
 	return CurrentInputManager;
