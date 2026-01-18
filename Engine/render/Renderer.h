@@ -23,7 +23,6 @@ private:
 	GLint CameraMatrixLocation; 
 	GLint ModelMatrixLocation;
 	GLint BaseTexture;
-
 	class ShaderProgram* CurrentShaderProgram;
 
 	glm::mat4 CameraMatrix;

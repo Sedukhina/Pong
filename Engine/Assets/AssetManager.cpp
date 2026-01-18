@@ -9,6 +9,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#define STB_TRUETYPE_IMPLEMENTATION
+#include "stb_truetype.h"
+#include <fstream>
+
+AssetManager::AssetManager()
+{
+	LoadFont();
+}
+
 const GLuint AssetManager::GetTextureAddress(std::filesystem::path path, uint64_t ID)
 {
 	if (LoadedTextures.find(ID) == LoadedTextures.end())
@@ -101,8 +110,55 @@ AssetManager::~AssetManager()
 		GLuint EBO = CurMesh.second->GetEBO();
 		glDeleteBuffers(1, &EBO);
 	}
+	for (const std::pair <const uint64_t, GLuint> Tex : LoadedTextures)
+	{
+		glDeleteTextures(1, &Tex.second);
+	}
 }
 	
+void AssetManager::LoadFont()
+{
+	// READING FONT FILE
+	std::ifstream InputFileStream(FontPath, std::ios::binary);
+	// Find the size of the file to allocate memory dynamically
+	InputFileStream.seekg(0, std::ios::end);
+	auto&& size = InputFileStream.tellg();
+	InputFileStream.seekg(0, std::ios::beg);
+	// Allocate the buffer
+	uint8_t* FontDataBuf = new uint8_t[static_cast<size_t>(size)];
+	// Read the font data to the buffer
+	InputFileStream.read((char*)FontDataBuf, size);
+
+	uint8_t* FontAtlasBitmap = new uint8_t[FontAtlasWidth * FontAtlasHeight];
+	stbtt_packedchar PackedChars[CharsToIncludeInFontAtlas];
+	stbtt_aligned_quad AlignedQuads[CharsToIncludeInFontAtlas];
+	
+	stbtt_pack_context PackContext;
+	// Context, Atlas data, Atlas texture width and height, stride in bytes, padding between glyphs
+	stbtt_PackBegin(&PackContext, (unsigned char*)FontAtlasBitmap,  FontAtlasWidth, FontAtlasHeight, 0, 1, nullptr);
+	// Context, Atlas tex data, font index, font size, characters to include (first, amount), struct for glyph render
+	stbtt_PackFontRange(&PackContext, FontDataBuf, 0, FontSize, CodePointOfFirstChar, CharsToIncludeInFontAtlas, PackedChars);
+	stbtt_PackEnd(&PackContext);
+	
+	for (int GlyphIndex = 0; GlyphIndex < CharsToIncludeInFontAtlas; GlyphIndex++)
+	{
+		float x;
+		float y;
+		stbtt_GetPackedQuad(PackedChars, FontAtlasWidth,FontAtlasHeight, GlyphIndex, &x, &y, &AlignedQuads[GlyphIndex], 0);
+	}
+
+	glGenTextures(1, &EnginesFontAtlas);
+	glBindTexture(GL_TEXTURE_2D, EnginesFontAtlas);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, FontAtlasWidth, FontAtlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, FontAtlasBitmap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	delete[] FontAtlasBitmap;
+	delete[] FontDataBuf;
+}
 
 void AssetManager::LoadTexture(std::filesystem::path path, uint64_t ID)
 {
