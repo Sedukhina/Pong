@@ -17,7 +17,7 @@ protected:
 
 	void MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, float Step);
 	// Returns contact normal
-	glm::vec2 Ball::CheckCollisionWithActors(const std::vector<std::shared_ptr<Actor>>& ActorsOnLevel, float Step, float* Distance, Actor* OtherActor);
+	glm::vec2 Ball::CheckCollisionWithActors(const std::vector<std::shared_ptr<Actor>>& ActorsOnLevel, float Step, float* Distance);
 	// Returns which directions were overlapped
 	std::array<bool, 2> Ball::CheckCollisionWithWalls(float Step, float* Distance);
 
@@ -27,4 +27,5 @@ protected:
 	glm::vec2 Direction;
 
 	std::filesystem::path EndRoundSound = "LostRound.mp3";
+	std::filesystem::path PlatformSound = "Platform.mp3";
 };

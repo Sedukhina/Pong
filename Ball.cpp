@@ -68,7 +68,7 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 	{
 		float ActorDistance = -1.f;
 		Actor* OtherActor = nullptr;
-		glm::vec2 ContactNormal = CheckCollisionWithActors(ActorsOnLevel, Step, &ActorDistance, OtherActor);
+		glm::vec2 ContactNormal = CheckCollisionWithActors(ActorsOnLevel, Step, &ActorDistance);
 		float WallDistance = -1;
 		std::array<bool, 2> Directions = CheckCollisionWithWalls(Step, &WallDistance);
 
@@ -98,9 +98,10 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 			Direction = glm::normalize(Direction - 2.0f * glm::dot(Direction, ContactNormal) * ContactNormal);
 			Direction = glm::normalize(Direction);
 			// Offset from surface
-			NewPosition += glm::vec3(Direction, 0.f) * .005f;
+			NewPosition += glm::vec3(Direction, 0.f) * .5f;
 			Step -= ActorDistance;
 			SetPosition(NewPosition);
+			Globals::GetSoundPlayer()->PlaySoundFromFile(PlatformSound);
 		}
 	}
 
@@ -165,7 +166,7 @@ std::array<bool, 2> Ball::CheckCollisionWithWalls(float Step, float* Distance)
 	return Directions;
 }
 
-glm::vec2 Ball::CheckCollisionWithActors(const std::vector<std::shared_ptr<Actor>>& ActorsOnLevel, float Step, float* Distance, Actor* OtherActor)
+glm::vec2 Ball::CheckCollisionWithActors(const std::vector<std::shared_ptr<Actor>>& ActorsOnLevel, float Step, float* Distance)
 {
 	glm::vec2 ContactNormal = glm::vec2(0.f);
 	for (std::shared_ptr<Actor> ActorOnLevel : ActorsOnLevel)
@@ -180,33 +181,35 @@ glm::vec2 Ball::CheckCollisionWithActors(const std::vector<std::shared_ptr<Actor
 			continue;
 		}
 		
-		float RemainedDist = Step;
-		float PreviousDistance;
+		float RemainedStep = Step;
 		fcl::AABBf OtherActorColisionAABB = OtherActorCollision->getAABB();
 		glm::vec2 NewLoc = GetPosition();
-		while (RemainedDist != 0)
+		while (RemainedStep > 0.005f)
 		{
 			glm::vec2 NearestPoint = glm::vec2(
 				glm::clamp(NewLoc.x, OtherActorColisionAABB.min_.x(), OtherActorColisionAABB.max_.x()),
 				glm::clamp(NewLoc.y, OtherActorColisionAABB.min_.y(), OtherActorColisionAABB.max_.y()));
-			float Dist = glm::distance(NearestPoint, NewLoc);
-			if (Dist > RemainedDist + Radius)
+			float DistBetweenCenterAndAABB = glm::distance(NearestPoint, NewLoc);
+			// If distance is bigger then step
+			if (DistBetweenCenterAndAABB > RemainedStep + Radius)
 			{
-				RemainedDist = 0;
+				RemainedStep = 0;
 			}
-			else if (Dist <= Radius)
+			// If contact with surface
+			else if (DistBetweenCenterAndAABB <= Radius)
 			{
-				if (*Distance > Step - RemainedDist || *Distance == -1)
+				if (*Distance > Step - RemainedStep || *Distance == -1)
 				{
-					*Distance = Step - RemainedDist;
-					RemainedDist = 0;
+					*Distance = Step - RemainedStep;
+					RemainedStep = 0;
 					ContactNormal = glm::normalize(NewLoc - NearestPoint);
 				}
 			}
+			// Else: walk maximum safe distance and try all conditions again
 			else
 			{
-				NewLoc += Direction * Dist;
-				RemainedDist -= Dist;
+				NewLoc += Direction * (DistBetweenCenterAndAABB - Radius);
+				RemainedStep -= (DistBetweenCenterAndAABB - Radius);
 			}
 		}
 	}
