@@ -10,7 +10,7 @@ public:
 	void MovePlatform(glm::vec3 direction, float speed);
 
 protected:
-	float PlatformSpeed = 3.f;
+	float PlatformSpeed = 5.f;
 
 	InputKey MovePlatformUpKey;
 	InputKey MovePlatformDownKey;

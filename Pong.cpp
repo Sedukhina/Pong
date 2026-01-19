@@ -22,7 +22,7 @@ int main()
     PongLevel.AddUIOnLevel(Player2ScoreUI);
     PongLevel.AddActorOnLevel(Player1);
     PongLevel.AddActorOnLevel(Player2);
-    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 0.5f);
+    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 0.025f);
     PongLevel.AddActorOnLevel(PongBall);
     PongGameState GM{10, Player1ScoreUI, Player2ScoreUI};
     PongBall->BindFunctionOnEndRound(std::bind(&PongGameState::AddPointForPlayer, &GM, std::placeholders::_1));
