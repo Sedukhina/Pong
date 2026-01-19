@@ -3,6 +3,7 @@
 #include "Scene/UI/TextUI.h"
 #include <array>
 #include <memory>
+#include <filesystem>
 
 class PongGameState : public GameState
 {
@@ -17,4 +18,6 @@ private:
 	int WinCondition;
 	std::array<int, 2> Score{ 0, 0 };
 	std::array<std::weak_ptr<TextUI>, 2> PlayerScoreUIs;
+
+	std::filesystem::path WinSound = "Win.mp3";
 };

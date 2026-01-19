@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/Scene/Actor.h"
+#include <filesystem>
 
 class Ball : public Actor
 {
@@ -23,4 +24,6 @@ protected:
 	const float Radius;
 	float Speed = 0.f;
 	glm::vec3 Direction;
+
+	std::filesystem::path EndRoundSound = "LostRound.mp3";
 };

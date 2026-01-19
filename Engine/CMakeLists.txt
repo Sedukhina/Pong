@@ -27,6 +27,9 @@ target_link_libraries(Engine PRIVATE assimp::assimp)
 find_package(magic_enum CONFIG REQUIRED)
 target_link_libraries(Engine PRIVATE magic_enum::magic_enum)
 
+find_path(MINIAUDIO_INCLUDE_DIRS "miniaudio.h")
+target_include_directories(Engine PRIVATE ${MINIAUDIO_INCLUDE_DIRS})
+
 set(SHADERS_DIR ${CMAKE_BINARY_DIR}/Shaders)
 target_include_directories(Engine PUBLIC ${SHADERS_DIR})
 file(GLOB shaders "render/Shaders/*.vert" "render/Shaders/*.frag")

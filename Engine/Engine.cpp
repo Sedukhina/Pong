@@ -4,6 +4,7 @@
 #include "Assets/AssetManager.h"
 #include "Globals.h"
 #include "Log.h"
+#include "Assets/SoundPlayer.h"
 #include <time.h>
 
 Engine::Engine()
@@ -15,6 +16,8 @@ Engine::Engine()
     CurrentInputManager = std::make_shared<InputManager>();
     CurrentInputManager->BindInput(std::bind(&Engine::SetShouldShutdownTrue, this), InputKey::ESC, InputAction::PRESSED);
     Globals::SetInputManager(CurrentInputManager.get());
+    CurrentSoundPlayer = std::make_shared<SoundPlayer>();
+    Globals::SetSoundPlayer(CurrentSoundPlayer.get());
 }
 
 Engine::~Engine()

@@ -27,9 +27,7 @@ void PongGameState::CheckWinCondition()
 		std::string Result = ss.str();
 		std::shared_ptr<TextUI> PlayerWonUI = std::make_shared<TextUI>(std::string(Result), glm::vec3(-35.f, 0.f, -3.f), glm::vec3(0.f), glm::vec3(0.156f));
 		Globals::GetLevel()->AddUIOnLevel(PlayerWonUI);
+		Globals::GetSoundPlayer()->PlaySoundFromFile(WinSound);
 		EndGame();
 	}
-	char buffer[300];
-	sprintf(buffer, "%d %d", Score[0], Score[1]);
-	LOG_INFO(buffer);
 }

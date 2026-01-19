@@ -25,6 +25,11 @@ Level* Globals::GetLevel()
 	return CurrentLevel;
 }
 
+SoundPlayer* Globals::GetSoundPlayer()
+{
+	return CurrentSoundPlayer;
+}
+
 void Globals::SetInputManager(InputManager* NewInputManagerPtr)
 {
 	CurrentInputManager = NewInputManagerPtr;
@@ -38,6 +43,11 @@ void Globals::SetAssetManager(AssetManager* NewAssetManagerPtr)
 void Globals::SetLevel(Level* NewLevel)
 {
 	CurrentLevel = NewLevel;
+}
+
+void Globals::SetSoundPlayer(SoundPlayer* NewSoundPlayer)
+{
+	CurrentSoundPlayer = NewSoundPlayer;
 }
 
 const float Globals::GetScreenHalfWidth()

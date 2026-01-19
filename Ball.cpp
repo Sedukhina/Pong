@@ -49,6 +49,7 @@ void Ball::StartRound()
 
 void Ball::EndRound(bool Player)
 {
+	Globals::GetSoundPlayer()->PlaySoundFromFile(EndRoundSound);
 	for (std::function<void(int)> EndGameFunction : OnRoundEndBindedFunctions)
 	{
 		std::invoke(EndGameFunction, Player);

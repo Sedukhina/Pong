@@ -19,6 +19,7 @@ protected:
 
     std::shared_ptr<class InputManager> CurrentInputManager;
     std::shared_ptr<class AssetManager> CurrentAssetManager;
+    std::shared_ptr<class SoundPlayer> CurrentSoundPlayer;
 
     bool ShouldShutdown = false;
 };
