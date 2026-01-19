@@ -82,7 +82,7 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 			Step -= WallDistance;
 			if (Directions[0]) 
 			{ 
-				EndRound(Direction.y > 0); 
+				EndRound(Direction.x < 0); 
 				return;
 			};
 			if (Directions[1]) { Direction.y = -Direction.y; };
@@ -172,11 +172,11 @@ void Ball::CheckCollisionWithActors(const std::vector<std::shared_ptr<Actor>>& A
 		fcl::Transform3f EndTransform = GetActorCollision()->getTransform();
 
 		fcl::Transform3f OtherActorTransform = OtherActorCollision->getTransform();
-		fcl::continuousCollide(GetActorCollision().get(),
+		/*fcl::continuousCollide(GetActorCollision().get(),
 		  EndTransform,
 		  OtherActorCollision.get(),
 		  OtherActorTransform,
-		  Request, Result);
+		  Request, Result);*/
 	}
 	return;
 }

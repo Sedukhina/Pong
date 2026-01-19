@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include "glm/glm.hpp"
 
+#include <memory>
+
 class Renderer
 {
 public:
@@ -17,6 +19,7 @@ public:
 
 private:
 	void RenderModels(float DeltaTime, class Level* CurrentLevel);
+	void RenderTextUIs(float DeltaTime, class Level* CurrentLevel);
 
 	GLFWwindow* window;
 
@@ -26,7 +29,14 @@ private:
 	GLint CameraMatrixLocation; 
 	GLint ModelMatrixLocation;
 	GLint BaseTexture;
-	class ShaderProgram* CurrentShaderProgram;
+	std::unique_ptr<class ShaderProgram> ModelsShaderProgram;
+
+	// Uniforms for shaders
+	GLint TextSPFontAtlasLocation;
+	GLint TextSPCameraMatrixLocation;
+	GLint TextSPModelMatrixLocation;
+	GLint TextSPColorLocation;
+	std::unique_ptr<class ShaderProgram> TextShaderProgram;
 
 	glm::mat4 CameraMatrix;
 };

@@ -53,21 +53,35 @@ bool Renderer::InitRenderer()
 	// Global OpenGL Settings
 	glEnable(GL_DEPTH_TEST);
 
+	Globals::GetAssetManager()->LoadFont();
+
+	glActiveTexture(GL_TEXTURE0);
 	// Creating Shader Program
-	CurrentShaderProgram = &ShaderProgram("/Shaders/Shader.vert", "/Shaders/Shader.frag");
-	BaseTexture = CurrentShaderProgram->GetUniformLocation("BaseColor");
+	ModelsShaderProgram = std::make_unique<ShaderProgram>(ShaderProgram("/Shaders/Shader.vert", "/Shaders/Shader.frag"));
+	ModelsShaderProgram->Use();
+	BaseTexture = ModelsShaderProgram->GetUniformLocation("BaseColor");
 	// Texture 0 will be taken as BaseColor texture
 	glUniform1i(BaseTexture, 0);
-	CurrentShaderProgram->Use();
 
-	ModelMatrixLocation = CurrentShaderProgram->GetUniformLocation("ModelMatrix");
+	ModelMatrixLocation = ModelsShaderProgram->GetUniformLocation("ModelMatrix");
 
 	// Setting camera
-	CameraMatrixLocation = CurrentShaderProgram->GetUniformLocation("CameraMatrix");
+	CameraMatrixLocation = ModelsShaderProgram->GetUniformLocation("CameraMatrix");
 	glm::mat4 ViewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.f, 0.0f, 10.0f));
 	glm::mat4 ProjectionMatrix = glm::ortho(-Globals::GetScreenHalfWidth(), Globals::GetScreenHalfWidth(), -Globals::GetScreenHalfHeight(), Globals::GetScreenHalfHeight(), -20.f, 20.f);
 	CameraMatrix = ProjectionMatrix * ViewMatrix;
 	glUniformMatrix4fv(CameraMatrixLocation, 1, GL_FALSE, glm::value_ptr(CameraMatrix));
+
+	// Text Shader program setup
+	TextShaderProgram = std::make_unique<ShaderProgram>("/Shaders/TextShader.vert", "/Shaders/TextShader.frag");
+	TextShaderProgram->Use();
+	TextSPModelMatrixLocation = TextShaderProgram->GetUniformLocation("ModelMatrix");
+	TextSPColorLocation = TextShaderProgram->GetUniformLocation("Color");
+	TextSPCameraMatrixLocation = TextShaderProgram->GetUniformLocation("CameraMatrix");
+	glUniformMatrix4fv(TextSPCameraMatrixLocation, 1, GL_FALSE, glm::value_ptr(CameraMatrix));
+	glActiveTexture(GL_TEXTURE0);
+	TextSPFontAtlasLocation = TextShaderProgram->GetUniformLocation("FontAtlas");
+	glUniform1i(TextSPFontAtlasLocation, 0);
 
 	return true;
 }
@@ -79,10 +93,11 @@ void Renderer::Tick(float DeltaTime)
 	{
 		return;
 	}
-	glClearColor(0.05f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.05f, 0.2f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	RenderModels(DeltaTime, CurrentLevel);
+	RenderTextUIs(DeltaTime, CurrentLevel);
 	
 	glfwSwapBuffers(window);
 	glfwPollEvents();
@@ -102,6 +117,8 @@ Renderer::~Renderer()
 
 void Renderer::RenderModels(float DeltaTime, Level* CurrentLevel)
 {
+	ModelsShaderProgram->Use();
+	glActiveTexture(GL_TEXTURE0);
 	const std::vector<std::shared_ptr<Actor>> ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
 	for (std::shared_ptr<Actor> ActorOnLevel : ActorsOnLevel)
 	{
@@ -119,5 +136,30 @@ void Renderer::RenderModels(float DeltaTime, Level* CurrentLevel)
 
 			glDrawElements(AssetMan->GetMeshDrawingMode(ActorsModel->GetMeshID()), MeshInfo.second, GL_UNSIGNED_INT, 0);
 		}
+	}
+}
+
+void Renderer::RenderTextUIs(float DeltaTime, Level* CurrentLevel)
+{
+	TextShaderProgram->Use();
+	GLuint Atlas = Globals::GetAssetManager()->GetFontAtlas();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, Atlas);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	const std::vector<std::shared_ptr<TextUI>> TextUIsOnLevel = CurrentLevel->GetTextUIsOnLevel();
+	for (std::shared_ptr<TextUI> CurTextUI : TextUIsOnLevel)
+	{
+		glm::mat4 ModelMatrix = CurTextUI->GetModelMatrix();
+		glUniformMatrix4fv(TextSPModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+		glm::vec4 Color = CurTextUI->GetColor();
+		glUniform4fv(TextSPColorLocation, 1, glm::value_ptr(Color));
+		GLuint VAO = CurTextUI->GetVAO();
+		glBindVertexArray(VAO);
+		unsigned int IndicesSize = CurTextUI->GetIndicesSize();
+
+		glDrawElements(GL_TRIANGLES, IndicesSize, GL_UNSIGNED_INT, 0);
 	}
 }

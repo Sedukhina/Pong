@@ -13,3 +13,12 @@ struct Vertex
 	float TextureCoordinateX;
 	float TextureCoordinateY;
 };
+
+struct TextVertex
+{
+	float PositionX;
+	float PositionY;
+
+	float TextureCoordinateX;
+	float TextureCoordinateY;
+};

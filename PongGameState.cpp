@@ -1,8 +1,8 @@
 #include "PongGameState.h"
 #include "Log.h"
 
-PongGameState::PongGameState(int winCondition)
-	: WinCondition(winCondition)
+PongGameState::PongGameState(int winCondition, std::weak_ptr<TextUI> Player1ScoreUI, std::weak_ptr<TextUI> Player2ScoreUI)
+	: WinCondition(winCondition), PlayerScoreUIs { Player1ScoreUI, Player2ScoreUI }
 {
 }
 
@@ -13,6 +13,7 @@ void PongGameState::AddPointForPlayer(int Player)
 		return;
 	}
 	Score[Player] += 1;
+	PlayerScoreUIs[Player].lock()->SetText(std::to_string(Score[Player]));
 	CheckWinCondition();
 }
 

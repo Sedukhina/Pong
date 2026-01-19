@@ -18,12 +18,15 @@ public:
 	std::array<glm::vec2, 2> GetMeshAABB(std::filesystem::path path, uint64_t ID);
 	GLenum GetMeshDrawingMode(uint64_t ID);
 
+	void LoadFont();
+	GLuint GetFontAtlas() const;
+	void GenTextUIVertices(std::string str, GLuint VBO);
+
 	void LoadAsset(std::filesystem::path path, uint64_t ID);
 
 	~AssetManager();
 
 private:
-	void LoadFont();
 	void LoadTexture(std::filesystem::path path, uint64_t ID);
 	void LoadModel(std::filesystem::path path, uint64_t ID);
 	void LoadGeneratedMesh(std::filesystem::path path, uint64_t ID);

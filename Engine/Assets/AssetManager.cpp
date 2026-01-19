@@ -9,13 +9,20 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
+
+
+stbtt_packedchar PackedChars[CharsToIncludeInFontAtlas];
+
 #include <fstream>
 
 AssetManager::AssetManager()
 {
-	LoadFont();
+
 }
 
 const GLuint AssetManager::GetTextureAddress(std::filesystem::path path, uint64_t ID)
@@ -130,7 +137,7 @@ void AssetManager::LoadFont()
 	InputFileStream.read((char*)FontDataBuf, size);
 
 	uint8_t* FontAtlasBitmap = new uint8_t[FontAtlasWidth * FontAtlasHeight];
-	stbtt_packedchar PackedChars[CharsToIncludeInFontAtlas];
+
 	stbtt_aligned_quad AlignedQuads[CharsToIncludeInFontAtlas];
 	
 	stbtt_pack_context PackContext;
@@ -142,11 +149,12 @@ void AssetManager::LoadFont()
 	
 	for (int GlyphIndex = 0; GlyphIndex < CharsToIncludeInFontAtlas; GlyphIndex++)
 	{
-		float x;
-		float y;
+		float x = 0.f;
+		float y = 0.f;
 		stbtt_GetPackedQuad(PackedChars, FontAtlasWidth,FontAtlasHeight, GlyphIndex, &x, &y, &AlignedQuads[GlyphIndex], 0);
 	}
 
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glGenTextures(1, &EnginesFontAtlas);
 	glBindTexture(GL_TEXTURE_2D, EnginesFontAtlas);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, FontAtlasWidth, FontAtlasHeight, 0, GL_RED, GL_UNSIGNED_BYTE, FontAtlasBitmap);
@@ -156,8 +164,67 @@ void AssetManager::LoadFont()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+	stbi_write_png("FontAtlas.png", FontAtlasWidth, FontAtlasHeight, 1, FontAtlasBitmap, FontAtlasWidth);
+
 	delete[] FontAtlasBitmap;
 	delete[] FontDataBuf;
+}
+
+GLuint AssetManager::GetFontAtlas() const
+{
+	return EnginesFontAtlas;
+}
+
+void AssetManager::GenTextUIVertices(std::string Text, GLuint VBO)
+{
+	std::vector<TextVertex> Vertices;
+	Vertices.reserve(Text.size() * 4);
+
+	float x = 0.f;
+	float y = 0.f;
+
+	for (size_t i = 0; i < Text.size(); ++i) {
+		char Character = Text[i];
+		if (Character < CodePointOfFirstChar || Character >= CodePointOfFirstChar + CharsToIncludeInFontAtlas)
+		{
+			continue;
+		}
+
+		stbtt_aligned_quad AllignedQuad;
+		stbtt_GetPackedQuad(PackedChars, FontAtlasWidth, FontAtlasHeight, Character - CodePointOfFirstChar, &x, &y, &AllignedQuad, 0);
+
+		TextVertex BottomLeft;
+		BottomLeft.PositionX = AllignedQuad.x0;
+		BottomLeft.PositionY = AllignedQuad.y0;
+		BottomLeft.TextureCoordinateX = AllignedQuad.s0;
+		BottomLeft.TextureCoordinateY = AllignedQuad.t1;
+
+		TextVertex TopLeft;
+		TopLeft.PositionX = AllignedQuad.x0;
+		TopLeft.PositionY = AllignedQuad.y1;
+		TopLeft.TextureCoordinateX = AllignedQuad.s0;
+		TopLeft.TextureCoordinateY = AllignedQuad.t0;
+
+		TextVertex BottomRight;
+		BottomRight.PositionX = AllignedQuad.x1;
+		BottomRight.PositionY = AllignedQuad.y0;
+		BottomRight.TextureCoordinateX = AllignedQuad.s1;
+		BottomRight.TextureCoordinateY = AllignedQuad.t1;
+
+		TextVertex TopRight;
+		TopRight.PositionX = AllignedQuad.x1;
+		TopRight.PositionY = AllignedQuad.y1;
+		TopRight.TextureCoordinateX = AllignedQuad.s1;
+		TopRight.TextureCoordinateY = AllignedQuad.t0;
+
+		Vertices.push_back(BottomLeft);
+		Vertices.push_back(TopLeft);
+		Vertices.push_back(BottomRight);
+		Vertices.push_back(TopRight);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, Vertices.size() * sizeof(TextVertex), &Vertices[0]);
 }
 
 void AssetManager::LoadTexture(std::filesystem::path path, uint64_t ID)
