@@ -1,33 +1,28 @@
 #include "ShaderProgram.h"
 #include "Log.h"
 #include <fstream>
+#include "Assets/Asset.h"
 
 #define STRING(x) #x
 #define TO_STRING(x) STRING(x)
 
 ShaderProgram::ShaderProgram(std::filesystem::path pathToVertex, std::filesystem::path pathToFragment)
 {
-	std::string root(TO_STRING(BIN_ROOT));
-
-	std::filesystem::path absPathToVertex(root);
-	absPathToVertex += pathToVertex;
-	if (!std::filesystem::exists(absPathToVertex))
+	if (!IsExistingPath(&pathToVertex))
 	{
 		LOG_FATAL("Provided path to vertex shader doesn't exist: ");
-		LOG_FATAL(absPathToVertex.string().c_str());
+		LOG_FATAL(pathToVertex.string().c_str());
 	}
-	std::ifstream vShaderFile(absPathToVertex);
+	std::ifstream vShaderFile(pathToVertex);
 	std::string vertCode((std::istreambuf_iterator<char>(vShaderFile)),
-		std::istreambuf_iterator<char>());
+	std::istreambuf_iterator<char>());
 
-	std::filesystem::path absPathToFragment(root);
-	absPathToFragment += pathToFragment;
-	if (!std::filesystem::exists(absPathToFragment))
+	if (!IsExistingPath(&pathToFragment))
 	{
 		LOG_FATAL("Provided path to fragment shader doesn't exist: ");
-		LOG_FATAL(absPathToFragment.string().c_str());
+		LOG_FATAL(pathToFragment.string().c_str());
 	}
-	std::ifstream fShaderFile(absPathToFragment);
+	std::ifstream fShaderFile(pathToFragment);
 	std::string fragCode((std::istreambuf_iterator<char>(fShaderFile)),
 		std::istreambuf_iterator<char>());
 

@@ -43,7 +43,7 @@ void Ball::StartRound()
 
 	static std::random_device RandomDevice;
 	static std::mt19937 Generator(RandomDevice());
-	static std::uniform_real_distribution<float> Distribution(-0.85f, 0.85f);
+	static std::uniform_real_distribution<float> Distribution(-0.1f, 1.f);
 	Direction = glm::normalize(glm::vec2(Distribution(Generator), Distribution(Generator)));
 }
 
@@ -72,8 +72,14 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 		float WallDistance = -1;
 		std::array<bool, 2> Directions = CheckCollisionWithWalls(Step, &WallDistance);
 
+		if (ActorDistance == 0.f)
+		{
+			Direction = -Direction;
+			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 5.f);
+			SetPosition(NewPosition);
+		}
 		// No collision
-		if (WallDistance == -1.f && ActorDistance == -1.f)
+		else if (WallDistance == -1.f && ActorDistance == -1.f)
 		{
 			NewPosition += glm::vec3(Direction, 0.f) * Step;
 			Step = 0.f;
@@ -189,6 +195,12 @@ glm::vec2 Ball::CheckCollisionWithActors(const std::vector<std::shared_ptr<Actor
 			glm::vec2 NearestPoint = glm::vec2(
 				glm::clamp(NewLoc.x, OtherActorColisionAABB.min_.x(), OtherActorColisionAABB.max_.x()),
 				glm::clamp(NewLoc.y, OtherActorColisionAABB.min_.y(), OtherActorColisionAABB.max_.y()));
+			// If inside other object
+			if (NearestPoint == NewLoc)
+			{
+				*Distance = 0.f;
+				return glm::vec2();
+			}
 			float DistBetweenCenterAndAABB = glm::distance(NearestPoint, NewLoc);
 			// If distance is bigger then step
 			if (DistBetweenCenterAndAABB > RemainedStep + Radius)

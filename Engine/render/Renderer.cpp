@@ -57,7 +57,7 @@ bool Renderer::InitRenderer()
 
 	glActiveTexture(GL_TEXTURE0);
 	// Creating Shader Program
-	ModelsShaderProgram = std::make_unique<ShaderProgram>(ShaderProgram("/Shaders/Shader.vert", "/Shaders/Shader.frag"));
+	ModelsShaderProgram = std::make_unique<ShaderProgram>(ShaderProgram("Shaders/Shader.vert", "Shaders/Shader.frag"));
 	ModelsShaderProgram->Use();
 	BaseTexture = ModelsShaderProgram->GetUniformLocation("BaseColor");
 	// Texture 0 will be taken as BaseColor texture
@@ -73,7 +73,7 @@ bool Renderer::InitRenderer()
 	glUniformMatrix4fv(CameraMatrixLocation, 1, GL_FALSE, glm::value_ptr(CameraMatrix));
 
 	// Text Shader program setup
-	TextShaderProgram = std::make_unique<ShaderProgram>("/Shaders/TextShader.vert", "/Shaders/TextShader.frag");
+	TextShaderProgram = std::make_unique<ShaderProgram>("Shaders/TextShader.vert", "Shaders/TextShader.frag");
 	TextShaderProgram->Use();
 	TextSPModelMatrixLocation = TextShaderProgram->GetUniformLocation("ModelMatrix");
 	TextSPColorLocation = TextShaderProgram->GetUniformLocation("Color");
