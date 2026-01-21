@@ -14,6 +14,6 @@ protected:
 	InputKey MovePlatformUpKey;
 	InputKey MovePlatformDownKey;
 
-	inline static const auto MeshPath = "DonutPainting.fbx";
-	inline static const auto TexturePath = "Donut_tex.jpg";
+	inline static constexpr auto MeshPath = "DonutPainting.fbx";
+	inline static constexpr auto TexturePath = "Donut_tex.jpg";
 };

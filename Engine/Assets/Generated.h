@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 
 
-const auto GeneratedMeshExtension = ".gen";
+constexpr auto GeneratedMeshExtension = ".gen";
 
 std::filesystem::path GeneratePathForCircle(float Radius, int Segments);
 

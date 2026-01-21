@@ -114,7 +114,7 @@ void Renderer::RenderModels(float DeltaTime, Level* CurrentLevel)
 {
 	ModelsShaderProgram->Use();
 	glActiveTexture(GL_TEXTURE0);
-	const std::vector<std::shared_ptr<Actor>> ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
+	const auto& ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
 	for (const auto& ActorOnLevel : ActorsOnLevel)
 	{
 		glm::mat4 ModelMatrix = ActorOnLevel->GetModelMatrix();
@@ -144,7 +144,7 @@ void Renderer::RenderTextUIs(float DeltaTime, Level* CurrentLevel)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	const std::vector<std::shared_ptr<TextUI>> TextUIsOnLevel = CurrentLevel->GetTextUIsOnLevel();
+	const auto& TextUIsOnLevel = CurrentLevel->GetTextUIsOnLevel();
 	for (const auto& CurTextUI : TextUIsOnLevel)
 	{
 		glm::mat4 ModelMatrix = CurTextUI->GetModelMatrix();
