@@ -7,14 +7,12 @@ PongGameState::PongGameState(int winCondition, std::weak_ptr<TextUI> Player1Scor
 {
 }
 
-void PongGameState::AddPointForPlayer(int Player)
+void PongGameState::AddPointForPlayer(PongPlayer Player)
 {
-	if (Player != 1 && Player != 0)
-	{
-		return;
-	}
-	Score[Player] += 1;
-	PlayerScoreUIs[Player].lock()->SetText(std::to_string(Score[Player]));
+	int PlayerNum = static_cast<int>(Player) - 1;
+	Score[PlayerNum] += 1;
+	std::string PlayerScore = std::to_string(Score[PlayerNum]);
+	PlayerScoreUIs[PlayerNum].lock()->SetText(PlayerScore);
 	CheckWinCondition();
 }
 

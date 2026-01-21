@@ -4,6 +4,7 @@
 #include <array>
 #include <memory>
 #include <filesystem>
+#include "PongPlayer.h"
 
 class PongGameState : public GameState
 {
@@ -11,7 +12,7 @@ public:
 	PongGameState(int winCondition, std::weak_ptr<TextUI> Player1ScoreUI, std::weak_ptr<TextUI> Player2ScoreUI);
 	~PongGameState() {};
 
-	void AddPointForPlayer(int Player);
+	void AddPointForPlayer(PongPlayer Player);
 	void CheckWinCondition();
 
 private:

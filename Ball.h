@@ -1,19 +1,20 @@
 #pragma once
 #include "Engine/Scene/Actor.h"
 #include <filesystem>
+#include "PongPlayer.h"
 
 class Ball : public Actor
 {
 public:
 	Ball(float radius, float speed);
-	void BindFunctionOnEndRound(std::function<void(int)> func);
+	void BindFunctionOnEndRound(std::function<void(PongPlayer)> func);
 	virtual void Tick(float DeltaTime) override;
 
 protected:
 	void StartRound();
 
-	void EndRound(bool PlayerWinner);
-	std::vector<std::function<void(int)>> OnRoundEndBindedFunctions;
+	void EndRound(PongPlayer PlayerWinner);
+	std::vector<std::function<void(PongPlayer)>> OnRoundEndBindedFunctions;
 
 	void MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, float Step);
 	// Returns contact normal

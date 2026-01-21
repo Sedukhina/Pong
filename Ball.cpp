@@ -21,7 +21,7 @@ Ball::Ball(float radius, float speed)
 	StartRound();
 }
 
-void Ball::BindFunctionOnEndRound(std::function<void(int)> func)
+void Ball::BindFunctionOnEndRound(std::function<void(PongPlayer)> func)
 {
 	OnRoundEndBindedFunctions.push_back(func);
 }
@@ -47,10 +47,10 @@ void Ball::StartRound()
 	Direction = glm::normalize(glm::vec2(Distribution(Generator), Distribution(Generator)));
 }
 
-void Ball::EndRound(bool Player)
+void Ball::EndRound(PongPlayer Player)
 {
 	Globals::GetSoundPlayer()->PlaySoundFromFile(EndRoundSound);
-	for (std::function<void(int)> EndGameFunction : OnRoundEndBindedFunctions)
+	for (std::function<void(PongPlayer)> EndGameFunction : OnRoundEndBindedFunctions)
 	{
 		std::invoke(EndGameFunction, Player);
 	}
@@ -91,7 +91,7 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 			Step -= WallDistance;
 			if (Directions[0]) 
 			{ 
-				EndRound(Direction.x < 0); 
+				EndRound(Direction.x < 0 ? PongPlayer::Player_1 : PongPlayer::Player_2);
 				return;
 			};
 			if (Directions[1]) { Direction.y = -Direction.y; };
