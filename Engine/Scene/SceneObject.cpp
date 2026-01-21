@@ -20,7 +20,7 @@ SceneObject::SceneObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale
 	UpdateModelMatrix();
 }
 
-glm::vec3 SceneObject::GetPosition() const
+const glm::vec3& SceneObject::GetPosition() const
 {
 	return Position;
 }
@@ -31,17 +31,17 @@ void SceneObject::SetPosition(glm::vec3 newPosition)
 	OnTransformChanged();
 }
 
-glm::quat SceneObject::GetRotation() const
+const glm::quat& SceneObject::GetRotation() const
 {
 	return Rotation;
 }
 
-glm::vec3 SceneObject::GetScale() const
+const glm::vec3& SceneObject::GetScale() const
 {
 	return Scale;
 }
 
-glm::mat4 SceneObject::GetModelMatrix()
+const glm::mat4& SceneObject::GetModelMatrix() const
 {
 	return ModelMatrix;
 }

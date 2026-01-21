@@ -7,16 +7,16 @@ class Mesh
 public:
 	Mesh(GLuint vao, GLuint vbo, GLuint ebo, unsigned int indices, glm::vec2 Min, glm::vec2 Max);
 
-	const GLuint GetVAO() const;
-	const GLuint GetVBO() const;
-	const GLuint GetEBO() const;
+	const GLuint& GetVAO() const;
+	const GLuint& GetVBO() const;
+	const GLuint& GetEBO() const;
 	const unsigned int GetIndicesArraySize() const;
 
-	glm::vec2 GetAABBMin() const;
-	glm::vec2 GetAABBMax() const;
+	const glm::vec2& GetAABBMin() const;
+	const glm::vec2& GetAABBMax() const;
 
 	void SetDrawingMode(GLenum NewDrawingMode);
-	GLenum GetDrawingMode() const;
+	const GLenum& GetDrawingMode() const;
 
 private:
 	GLenum DrawingMode = GL_TRIANGLES;

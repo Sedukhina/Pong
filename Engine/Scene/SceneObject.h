@@ -10,12 +10,13 @@ public:
 	SceneObject(glm::vec3 position, glm::quat rotation, glm::vec3 scale);
 	SceneObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
 
-	glm::vec3 GetPosition() const;
-	glm::quat GetRotation() const;
-	glm::vec3 GetScale() const;
+	const glm::vec3& GetPosition() const;
+	const glm::quat& GetRotation() const;
+	const glm::vec3& GetScale() const;
 
-	glm::mat4 GetModelMatrix();
+	const glm::mat4& GetModelMatrix() const;
 
+	virtual ~SceneObject() = default;
 
 protected:
 	virtual void SetPosition(glm::vec3 newPosition);

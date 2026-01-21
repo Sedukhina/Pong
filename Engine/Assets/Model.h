@@ -11,8 +11,8 @@ public:
 	const uint64_t GetMeshID() const;
 	const uint64_t GetTextureID() const;
 
-	const std::filesystem::path GetMeshPath() const;
-	const std::filesystem::path GetTexturePath() const;
+	const std::filesystem::path& GetMeshPath() const;
+	const std::filesystem::path& GetTexturePath() const;
 
 private:
 	std::filesystem::path PathToMesh;

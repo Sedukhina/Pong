@@ -24,12 +24,12 @@ const uint64_t Model::GetTextureID() const
 	return TextureID;
 }
 
-const std::filesystem::path Model::GetMeshPath() const
+const std::filesystem::path& Model::GetMeshPath() const
 {
 	return PathToMesh;
 }
 
-const std::filesystem::path Model::GetTexturePath() const
+const std::filesystem::path& Model::GetTexturePath() const
 {
 	return PathToTexture;
 }

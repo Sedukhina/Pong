@@ -5,7 +5,7 @@
 typedef std::function<void()> InputActionFunction;
 
 // GLFW SCHEME COPY
-enum InputAction
+enum class InputAction
 {
 	RELEASED,
 	PRESSED,
@@ -13,7 +13,7 @@ enum InputAction
 	LAST_ACTION_VALUE = REPEATED
 };
 
-enum InputKey
+enum class InputKey
 {
 	// Alphabet based on ASCII
 	A = 65,

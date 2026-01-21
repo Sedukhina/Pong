@@ -5,17 +5,17 @@ Mesh::Mesh(GLuint vao, GLuint vbo, GLuint ebo, unsigned int indices, glm::vec2 M
 {
 }
 
-const GLuint Mesh::GetVAO() const
+const GLuint& Mesh::GetVAO() const
 {
 	return VAO;
 }
 
-const GLuint Mesh::GetVBO() const
+const GLuint& Mesh::GetVBO() const
 {
 	return VBO;
 }
 
-const GLuint Mesh::GetEBO() const
+const GLuint& Mesh::GetEBO() const
 {
 	return EBO;
 }
@@ -25,12 +25,12 @@ const unsigned int Mesh::GetIndicesArraySize() const
 	return IndicesArraySize;
 }
 
-glm::vec2 Mesh::GetAABBMin() const
+const glm::vec2& Mesh::GetAABBMin() const
 {
 	return MinCoords;
 }
 
-glm::vec2 Mesh::GetAABBMax() const
+const glm::vec2& Mesh::GetAABBMax() const
 {
 	return MaxCoords;
 }
@@ -40,7 +40,7 @@ void Mesh::SetDrawingMode(GLenum NewDrawingMode)
 	DrawingMode = NewDrawingMode;
 }
 
-GLenum Mesh::GetDrawingMode() const
+const GLenum& Mesh::GetDrawingMode() const
 {
 	return DrawingMode;
 }
