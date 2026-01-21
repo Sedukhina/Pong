@@ -75,8 +75,9 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 		if (ActorDistance == 0.f)
 		{
 			Direction = -Direction;
-			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 5.f);
+			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 3.f);
 			SetPosition(NewPosition);
+			return;
 		}
 		// No collision
 		else if (WallDistance == -1.f && ActorDistance == -1.f)

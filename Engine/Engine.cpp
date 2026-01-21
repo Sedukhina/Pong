@@ -28,15 +28,16 @@ Engine::~Engine()
 void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
 {
     Globals::SetTimeFreezed(false);
-    clock_t LastFrame = clock();
-    clock_t DeltaTime = 0;
+    std::chrono::steady_clock::time_point LastFrame = std::chrono::steady_clock::now();
+    float DeltaTime = 0.f;
     Globals::SetLevel(CurrentLevel);
     CurrentGameState->BindFunctionOnEndgame(std::bind(&Globals::SetTimeFreezed, true));
     while (!ShouldShutdown && !CurrentRenderer->GetWindowShouldCLose())
     {
         if (!Globals::GetTimeFreezed())
         {
-            DeltaTime = clock() - LastFrame + 1;
+            DeltaTime = std::chrono::duration<float>(std::chrono::steady_clock::now() - LastFrame).count();
+            LastFrame = std::chrono::steady_clock::now();
         }
         else
         {
@@ -44,7 +45,6 @@ void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
         }
         CurrentLevel->Tick(DeltaTime);
         CurrentRenderer->Tick(DeltaTime);
-        LastFrame = clock();
     }
     Globals::SetLevel(nullptr);
 }
