@@ -1,6 +1,6 @@
 #include "TextUI.h"
 #include "Globals.h"
-#include "Log.h"
+#include "Assets/AssetManager.h"
 
 TextUI::TextUI(std::string text, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 	: SceneObject(position, rotation, scale)

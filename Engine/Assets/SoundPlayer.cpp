@@ -1,7 +1,8 @@
+#include "SoundPlayer.h"
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
+#include "Asset.h"
 
-#include "SoundPlayer.h"
 
 
 SoundPlayer::SoundPlayer()

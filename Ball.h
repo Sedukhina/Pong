@@ -27,6 +27,7 @@ protected:
 	float Speed = 0.f;
 	glm::vec2 Direction;
 
-	std::filesystem::path EndRoundSound = "LostRound.mp3";
-	std::filesystem::path PlatformSound = "Platform.mp3";
+	inline static const auto TexturePath = "ink.jpg";
+	inline static const std::filesystem::path EndRoundSound = "LostRound.mp3";
+	inline static const std::filesystem::path PlatformSound = "Platform.mp3";
 };

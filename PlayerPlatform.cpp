@@ -1,15 +1,15 @@
 #include "PlayerPlatform.h"
 #include "Engine/Globals.h"
 #include "Assets/Asset.h"
+#include "Input/InputManager.h"
+#include "Assets/AssetManager.h"
 #include <glm/gtx/norm.hpp> 
-#include "Log.h"
 
 PlayerPlatform::PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, InputKey UpKey, InputKey DownKey)
 	: Actor(position, rotation, scale), MovePlatformUpKey(UpKey), MovePlatformDownKey(DownKey)
 {
 	// Setting visual representation
-	std::string MeshPath = "DonutPainting.fbx";
-	Model PlatformModel{ MeshPath, "Donut_tex.jpg" };
+	std::shared_ptr<Model> PlatformModel = std::make_shared<Model>( MeshPath, TexturePath );
 	this->AddModel(PlatformModel);
 
 	// Setting collision

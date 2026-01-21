@@ -1,22 +1,24 @@
 #include "Ball.h"
+// Ball mesh generation
 #include "Engine/Assets/Generated.h"
-#include "Engine/Log.h"
 #include "Globals.h"
 #include "Assets/Asset.h"
+#include "Assets/AssetManager.h"
+#include "Scene/Level.h"
+#include "Assets/SoundPlayer.h"
 #include <random>
 
 Ball::Ball(float radius, float speed)
 	: Speed(speed), Radius(radius)
 {
 	std::filesystem::path MeshPath = GeneratePathForCircle(radius, Segments);
-	Model PlatformModel{ MeshPath, "ink.jpg" };
-
+	std::shared_ptr<Model> BallModel = std::make_shared<Model>(MeshPath, TexturePath);
 	// Setting collision
 	std::array<glm::vec2, 2> AABB = Globals::GetAssetManager()->GetMeshAABB(MeshPath, GetAssetID(MeshPath));
 	std::shared_ptr<fcl::Spheref> CollsionSphere = std::make_shared<fcl::Spheref>(radius);
 	this->AddCollision(CollsionSphere);
 
-	this->AddModel(PlatformModel);
+	this->AddModel(BallModel);
 
 	StartRound();
 }
@@ -60,10 +62,6 @@ void Ball::EndRound(PongPlayer Player)
 void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, float Step)
 {
 	glm::vec3 NewPosition = GetPosition();
-
-	float ScreenHalfWidth = Globals::GetScreenHalfWidth();
-	float ScreenHalfHeight = Globals::GetScreenHalfHeight();
-
 	while (Step > 0.005f)
 	{
 		float ActorDistance = -1.f;
@@ -77,6 +75,7 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 			Direction = -Direction;
 			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 3.f);
 			SetPosition(NewPosition);
+			Globals::GetSoundPlayer()->PlaySoundFromFile(PlatformSound);
 			return;
 		}
 		// No collision

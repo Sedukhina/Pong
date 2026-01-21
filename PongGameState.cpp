@@ -1,6 +1,7 @@
 #include "PongGameState.h"
-#include "Log.h"
 #include "Globals.h"
+#include "Scene/Level.h"
+#include "Assets/SoundPlayer.h"
 
 PongGameState::PongGameState(int winCondition, std::weak_ptr<TextUI> Player1ScoreUI, std::weak_ptr<TextUI> Player2ScoreUI)
 	: WinCondition(winCondition), PlayerScoreUIs { Player1ScoreUI, Player2ScoreUI }

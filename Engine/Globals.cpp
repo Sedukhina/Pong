@@ -1,5 +1,11 @@
 #include "Globals.h"
 
+#include "Input/InputManager.h"
+#include "Assets/AssetManager.h"
+#include "Scene/Level.h"
+#include "Assets/SoundPlayer.h"
+#include "GameState.h"
+
 void Globals::SetTimeFreezed(bool NewValue)
 {
 	TimeFreezed = NewValue;

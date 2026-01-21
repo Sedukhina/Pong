@@ -1,15 +1,13 @@
 #pragma once
 // For smart pointers
 #include <memory>
-#include "Scene/Level.h"
-#include "GameState.h"
 
 class Engine
 {
 public:
     Engine();
 
-    void Run(Level* CurrentLevel, GameState* CurrentGameState);
+    void Run(class Level* CurrentLevel, class GameState* CurrentGameState);
 
     void SetShouldShutdownTrue();
 

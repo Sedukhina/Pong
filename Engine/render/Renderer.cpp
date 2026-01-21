@@ -3,6 +3,8 @@
 #include "InputCallback.h"
 #include "Log.h"
 #include "Assets/Model.h"
+#include "Assets/AssetManager.h"
+#include "Scene/Level.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -15,7 +17,6 @@ bool Renderer::InitRenderer()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	//window = glfwCreateWindow(mode->width, mode->height, "Engine", glfwGetPrimaryMonitor(), nullptr);
 	window = glfwCreateWindow((int)(mode->width * 0.8f), (int)(mode->height * 0.8f), "Pong", nullptr, nullptr);
 	Globals::SetScreenRatio((float)mode->width / (float)mode->height);
 
@@ -114,7 +115,7 @@ void Renderer::RenderModels(float DeltaTime, Level* CurrentLevel)
 	ModelsShaderProgram->Use();
 	glActiveTexture(GL_TEXTURE0);
 	const std::vector<std::shared_ptr<Actor>> ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
-	for (std::shared_ptr<Actor> ActorOnLevel : ActorsOnLevel)
+	for (const auto& ActorOnLevel : ActorsOnLevel)
 	{
 		glm::mat4 ModelMatrix = ActorOnLevel->GetModelMatrix();
 		glUniformMatrix4fv(ModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(ModelMatrix));
@@ -144,7 +145,7 @@ void Renderer::RenderTextUIs(float DeltaTime, Level* CurrentLevel)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	const std::vector<std::shared_ptr<TextUI>> TextUIsOnLevel = CurrentLevel->GetTextUIsOnLevel();
-	for (std::shared_ptr<TextUI> CurTextUI : TextUIsOnLevel)
+	for (const auto& CurTextUI : TextUIsOnLevel)
 	{
 		glm::mat4 ModelMatrix = CurTextUI->GetModelMatrix();
 		glUniformMatrix4fv(TextSPModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(ModelMatrix));

@@ -3,8 +3,9 @@
 #include "Log.h"
 #include "Generated.h"
 
+#include <assimp/scene.h>  
 #include <assimp/Importer.hpp> 
-#include <assimp/postprocess.h> 
+#include <assimp/postprocess.h>  
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -15,6 +16,7 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
 
+#include "Font.h"
 
 stbtt_packedchar PackedChars[CharsToIncludeInFontAtlas];
 

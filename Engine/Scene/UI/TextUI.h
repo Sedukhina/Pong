@@ -1,7 +1,6 @@
 #pragma once
 #include "Scene/SceneObject.h"
 #include <string>
-
 #include <GL/glew.h>
 
 const int MaxUITextSize = 300;

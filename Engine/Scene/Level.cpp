@@ -2,7 +2,7 @@
 
 void Level::Tick(float DeltaTime)
 {
-	for (std::shared_ptr<Actor> ActorOnLevel : ActorsOnLevel)
+	for (const auto& ActorOnLevel : ActorsOnLevel)
 	{
 		ActorOnLevel->Tick(DeltaTime);
 	}

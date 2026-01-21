@@ -13,9 +13,9 @@ Actor::Actor(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 {
 }
 
-void Actor::AddModel(Model &newModel)
+void Actor::AddModel(std::shared_ptr<Model> NewModel)
 {
-	ActorModels.push_back(std::make_shared<Model>(newModel));
+	ActorModels.push_back(NewModel);
 }
 
 void Actor::AddCollision(std::shared_ptr<fcl::CollisionGeometryf> collision)

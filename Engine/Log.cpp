@@ -1,5 +1,5 @@
 #include "Log.h"
-#include<cstdio>
+#include <cstdio>
 #include <magic_enum.hpp>
 
 void Log(LogLevel level, const char* message)

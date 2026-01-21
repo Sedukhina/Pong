@@ -5,9 +5,7 @@
 // Collision library
 #include <fcl/fcl.h>
 #include "Assets/Model.h"
-#include <filesystem>
 #include <memory>
-#include <typeinfo>
 
 class Actor : public SceneObject
 {
@@ -17,7 +15,7 @@ public:
 	
 	virtual void Tick(float DeltaTime) {};
 
-	void AddModel(Model& newModel);
+	void AddModel(std::shared_ptr<Model> NewModel);
 	void AddCollision(std::shared_ptr<fcl::CollisionGeometryf> collision);
 
 	const std::vector<std::shared_ptr<Model>>& GetActorsModels() const;

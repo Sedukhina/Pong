@@ -1,4 +1,6 @@
 #include "Engine.h"
+#include "Scene/Level.h"
+#include "GameState.h"
 #include "Render/Renderer.h"
 #include "Input/InputManager.h"
 #include "Assets/AssetManager.h"

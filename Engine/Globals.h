@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Input/InputManager.h"
-#include "Assets/AssetManager.h"
-#include "Scene/Level.h"
-#include "Assets/SoundPlayer.h"
-#include "GameState.h"
+class InputManager;
+class AssetManager;
+class Level;
+class SoundPlayer;
 
 class Globals
 {
