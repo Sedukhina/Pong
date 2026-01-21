@@ -73,7 +73,7 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 		if (ActorDistance == 0.f)
 		{
 			Direction = -Direction;
-			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 3.f);
+			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 2.f);
 			SetPosition(NewPosition);
 			Globals::GetSoundPlayer()->PlaySoundFromFile(PlatformSound);
 			return;

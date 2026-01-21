@@ -5,7 +5,7 @@
 const std::vector<std::string> ModelsExtensions = { ".fbx", ".obj" };
 const std::vector<std::string> TexturesExtensions = { ".png", ".jpg" };
 
-std::string AssetDirRoot = "Assets/";
+std::string AssetDirRoot = "../Assets/";
 
 uint64_t GetAssetID(std::filesystem::path path) 
 {

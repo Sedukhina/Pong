@@ -9,4 +9,4 @@ constexpr uint32_t CharsToIncludeInFontAtlas = 95;
 
 constexpr float FontSize = 64.0f;
 
-constexpr auto FontPath = "Assets/Winter Tosca.ttf";
+constexpr auto FontPath = "../Assets/Winter Tosca.ttf";
