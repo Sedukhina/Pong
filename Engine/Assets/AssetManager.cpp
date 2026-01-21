@@ -86,6 +86,7 @@ void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
 	{
 		LOG_WARNING("AssetManager::LoadAsset: Provided path to asset doesn't exist: ");
 		LOG_WARNING(path.string().c_str());
+		throw std::runtime_error("AssetManager::LoadAsset: Provided path to asset doesn't exist: " + path.string());
 		return;
 	}
 	if (Type == AssetType::Texture)
@@ -100,6 +101,7 @@ void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
 	{
 		LOG_WARNING("Provided path directs to unknown asset type: ");
 		LOG_WARNING(path.string().c_str());
+		throw std::runtime_error("Provided path directs to unknown asset type: " + path.string());
 	}
 }
 
@@ -244,7 +246,7 @@ void AssetManager::LoadTexture(std::filesystem::path path, uint64_t ID)
 	{
 		LOG_ERROR("Failed to load texture file ");
 		LOG_ERROR(path.string().c_str());
-		return;
+		throw std::runtime_error("Failed to load texture file " + path.string());
 	}
 
 	// Generating place in videomemory

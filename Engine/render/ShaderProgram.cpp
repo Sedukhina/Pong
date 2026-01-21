@@ -9,63 +9,65 @@ ShaderProgram::ShaderProgram(std::filesystem::path pathToVertex, std::filesystem
 	{
 		LOG_FATAL("Provided path to vertex shader doesn't exist: ");
 		LOG_FATAL(pathToVertex.string().c_str());
+		throw std::runtime_error("Provided path to vertex shader doesn't exist" + pathToVertex.string());
 	}
-	std::ifstream vShaderFile(pathToVertex);
-	std::string vertCode((std::istreambuf_iterator<char>(vShaderFile)),
+	std::ifstream VertexShaderFile(pathToVertex);
+	std::string VertCode((std::istreambuf_iterator<char>(VertexShaderFile)),
 	std::istreambuf_iterator<char>());
 
 	if (!IsExistingPath(&pathToFragment))
 	{
 		LOG_FATAL("Provided path to fragment shader doesn't exist: ");
 		LOG_FATAL(pathToFragment.string().c_str());
+		throw std::runtime_error("Provided path to fragment shader doesn't exist" + pathToFragment.string());
 	}
-	std::ifstream fShaderFile(pathToFragment);
-	std::string fragCode((std::istreambuf_iterator<char>(fShaderFile)),
+	std::ifstream FragmentShaderFile(pathToFragment);
+	std::string FragCode((std::istreambuf_iterator<char>(FragmentShaderFile)),
 		std::istreambuf_iterator<char>());
 
-	const GLchar* vShaderCode = vertCode.c_str();
-	const GLchar* fShaderCode = fragCode.c_str();
-	GLuint vertex, fragment;
+	const GLchar* vShaderCode = VertCode.c_str();
+	const GLchar* fShaderCode = FragCode.c_str();
+	GLuint Vertex, Fragment;
 
-	vertex = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertex, 1, &vShaderCode, NULL);
-	glCompileShader(vertex);
+	Vertex = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(Vertex, 1, &vShaderCode, NULL);
+	glCompileShader(Vertex);
 	GLint success;
-	glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(Vertex, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
 		GLchar infoLog[512];
-		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
+		glGetShaderInfoLog(Vertex, 512, NULL, infoLog);
 		LOG_FATAL("Vertex shader compilation error: ");
 		LOG_FATAL(infoLog);
 	}
 
-	fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragment, 1, &fShaderCode, NULL);
-	glCompileShader(fragment);
-	glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
+	Fragment = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(Fragment, 1, &fShaderCode, NULL);
+	glCompileShader(Fragment);
+	glGetShaderiv(Fragment, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
 		GLchar infoLog[512];
-		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
+		glGetShaderInfoLog(Fragment, 512, NULL, infoLog);
 		LOG_FATAL("Fragment shader compilation error: ");
 		LOG_FATAL(infoLog);
 	}
 
 	this->Program = glCreateProgram();
-	glAttachShader(this->Program, vertex);
-	glAttachShader(this->Program, fragment);
+	glAttachShader(this->Program, Vertex);
+	glAttachShader(this->Program, Fragment);
 	glLinkProgram(this->Program);
 	glGetProgramiv(this->Program, GL_LINK_STATUS, &success);
 	if (!success)
 	{
 		GLchar infoLog[512];
-		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
+		glGetShaderInfoLog(Fragment, 512, NULL, infoLog);
 		LOG_FATAL("Shader program compilation error : ");
 		LOG_FATAL(infoLog);
 	}
-	glDeleteShader(fragment);
-	glDeleteShader(vertex);
+	glDeleteShader(Fragment);
+	glDeleteShader(Vertex);
 }
 
 void ShaderProgram::Use()
