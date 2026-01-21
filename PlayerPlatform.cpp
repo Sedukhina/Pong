@@ -22,10 +22,6 @@ PlayerPlatform::PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3
 	Globals::GetInputManager()->BindInput(std::bind(&PlayerPlatform::MovePlatform, this, glm::vec3(0.f, 1.f, 0.f), -PlatformSpeed), MovePlatformDownKey, InputAction::PRESSED);
 }
 
-PlayerPlatform::~PlayerPlatform()
-{
-}
-
 void PlayerPlatform::MovePlatform(glm::vec3 direction, float step)
 {
 	if (glm::length2(direction) < 1e-4f)

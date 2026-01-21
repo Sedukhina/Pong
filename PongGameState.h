@@ -10,7 +10,6 @@ class PongGameState : public GameState
 {
 public:
 	PongGameState(int winCondition, std::weak_ptr<TextUI> Player1ScoreUI, std::weak_ptr<TextUI> Player2ScoreUI);
-	~PongGameState() {};
 
 	void AddPointForPlayer(PongPlayer Player);
 	void CheckWinCondition();

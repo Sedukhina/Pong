@@ -13,10 +13,6 @@ Actor::Actor(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 {
 }
 
-Actor::~Actor()
-{
-}
-
 void Actor::AddModel(Model &newModel)
 {
 	ActorModels.push_back(std::make_shared<Model>(newModel));

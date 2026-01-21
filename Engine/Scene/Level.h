@@ -8,9 +8,6 @@
 class Level
 {
 public:
-	Level();
-	~Level();
-
 	void Tick(float DeltaTime);
 
 	void AddActorOnLevel(std::shared_ptr<Actor> actor);

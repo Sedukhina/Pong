@@ -20,7 +20,6 @@ public:
 	GLuint GetVAO() const;
 	unsigned int GetIndicesSize() const;
 
-	~TextUI() {};
 protected:
 	std::string Text;
 	glm::vec4 Color = glm::vec4(1.f);

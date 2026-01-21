@@ -1,14 +1,6 @@
 #include "Input/InputManager.h"
 #include "Log.h"
 
-InputManager::InputManager()
-{
-}
-
-InputManager::~InputManager()
-{
-}
-
 void InputManager::HandleInput(int key, int action)
 {
 	if (key < 0 || InputKey::LAST_KEY_VALUE < key || action < 0 || InputAction::LAST_ACTION_VALUE < action)

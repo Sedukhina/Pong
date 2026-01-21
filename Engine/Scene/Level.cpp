@@ -1,13 +1,5 @@
 #include "Level.h"
 
-Level::Level()
-{
-}
-
-Level::~Level()
-{
-}
-
 void Level::Tick(float DeltaTime)
 {
 	for (std::shared_ptr<Actor> ActorOnLevel : ActorsOnLevel)

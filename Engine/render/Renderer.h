@@ -9,7 +9,7 @@
 class Renderer
 {
 public:
-	Renderer();
+	Renderer() = default;
 	bool InitRenderer();  
 	
 	void Tick(float DeltaTime);
@@ -29,14 +29,14 @@ private:
 	GLint CameraMatrixLocation; 
 	GLint ModelMatrixLocation;
 	GLint BaseTexture;
-	std::unique_ptr<class ShaderProgram> ModelsShaderProgram;
+	std::shared_ptr<class ShaderProgram> ModelsShaderProgram;
 
 	// Uniforms for shaders
 	GLint TextSPFontAtlasLocation;
 	GLint TextSPCameraMatrixLocation;
 	GLint TextSPModelMatrixLocation;
 	GLint TextSPColorLocation;
-	std::unique_ptr<class ShaderProgram> TextShaderProgram;
+	std::shared_ptr<class ShaderProgram> TextShaderProgram;
 
 	glm::mat4 CameraMatrix;
 };

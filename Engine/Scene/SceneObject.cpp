@@ -20,10 +20,6 @@ SceneObject::SceneObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale
 	UpdateModelMatrix();
 }
 
-SceneObject::~SceneObject()
-{
-}
-
 glm::vec3 SceneObject::GetPosition() const
 {
 	return Position;

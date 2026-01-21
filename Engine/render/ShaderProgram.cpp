@@ -3,9 +3,6 @@
 #include <fstream>
 #include "Assets/Asset.h"
 
-#define STRING(x) #x
-#define TO_STRING(x) STRING(x)
-
 ShaderProgram::ShaderProgram(std::filesystem::path pathToVertex, std::filesystem::path pathToFragment)
 {
 	if (!IsExistingPath(&pathToVertex))

@@ -14,7 +14,6 @@ class Actor : public SceneObject
 public:
 	Actor();
 	Actor(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
-	~Actor();
 	
 	virtual void Tick(float DeltaTime) {};
 

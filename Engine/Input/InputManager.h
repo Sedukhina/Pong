@@ -6,8 +6,7 @@
 class InputManager
 {
 public:
-	InputManager();
-	~InputManager();
+	InputManager() = default;
 
 	void HandleInput(int Key, int Action);
 

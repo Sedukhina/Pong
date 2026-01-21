@@ -20,11 +20,6 @@ stbtt_packedchar PackedChars[CharsToIncludeInFontAtlas];
 
 #include <fstream>
 
-AssetManager::AssetManager()
-{
-
-}
-
 const GLuint AssetManager::GetTextureAddress(std::filesystem::path path, uint64_t ID)
 {
 	if (LoadedTextures.find(ID) == LoadedTextures.end())

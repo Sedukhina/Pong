@@ -9,7 +9,6 @@ public:
 	SceneObject();
 	SceneObject(glm::vec3 position, glm::quat rotation, glm::vec3 scale);
 	SceneObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
-	~SceneObject();
 
 	glm::vec3 GetPosition() const;
 	glm::quat GetRotation() const;

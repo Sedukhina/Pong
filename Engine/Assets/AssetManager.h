@@ -11,7 +11,8 @@
 class AssetManager
 {
 public:
-	AssetManager();
+	AssetManager() = default;
+	~AssetManager();
 	
 	const GLuint GetTextureAddress(std::filesystem::path path, uint64_t ID);
 	std::pair<const GLuint, const unsigned int> GetMeshAddressAndIndicesSize(std::filesystem::path path, uint64_t ID);
@@ -23,8 +24,6 @@ public:
 	void GenTextUIVertices(std::string str, GLuint VBO);
 
 	void LoadAsset(std::filesystem::path path, uint64_t ID);
-
-	~AssetManager();
 
 private:
 	void LoadTexture(std::filesystem::path path, uint64_t ID);

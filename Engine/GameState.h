@@ -5,8 +5,7 @@
 class GameState
 {
 public:
-	GameState();
-	~GameState() {};
+	GameState() = default;
 
 	void BindFunctionOnEndgame(std::function<void()> func);
 

@@ -8,14 +8,13 @@ class Engine
 {
 public:
     Engine();
-    ~Engine();
 
     void Run(Level* CurrentLevel, GameState* CurrentGameState);
 
     void SetShouldShutdownTrue();
 
 protected:
-    std::unique_ptr<class Renderer> CurrentRenderer;
+    std::shared_ptr<class Renderer> CurrentRenderer;
 
     std::shared_ptr<class InputManager> CurrentInputManager;
     std::shared_ptr<class AssetManager> CurrentAssetManager;

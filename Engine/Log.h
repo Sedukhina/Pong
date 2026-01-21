@@ -1,6 +1,6 @@
 #pragma once
 
-enum LogLevel
+enum class LogLevel
 {
     FATAL = 0,
     ERROR = 1,
@@ -11,8 +11,8 @@ enum LogLevel
 
 void Log(LogLevel level, const char* message);
 
-#define LOG_FATAL(message) Log(FATAL, message)
-#define LOG_ERROR(message) Log(ERROR, message)
-#define LOG_WARNING(message) Log(WARNING, message)
-#define LOG_INFO(message) Log(INFO, message)
-#define LOG_DEBUG(message) Log(DEBUG, message)    
+#define LOG_FATAL(message) Log(LogLevel::FATAL, message)
+#define LOG_ERROR(message) Log(LogLevel::ERROR, message)
+#define LOG_WARNING(message) Log(LogLevel::WARNING, message)
+#define LOG_INFO(message) Log(LogLevel::INFO, message)
+#define LOG_DEBUG(message) Log(LogLevel::DEBUG, message)    

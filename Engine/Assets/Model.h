@@ -7,7 +7,6 @@ class Model
 public:
 	Model(std::filesystem::path Mesh);
 	Model(std::filesystem::path Mesh, std::filesystem::path Texture);
-	~Model() {};
 
 	const uint64_t GetMeshID() const;
 	const uint64_t GetTextureID() const;

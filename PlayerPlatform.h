@@ -5,7 +5,6 @@ class PlayerPlatform : public Actor
 {
 public:
 	PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, InputKey UpKey, InputKey DownKey);
-	~PlayerPlatform();
 
 	void MovePlatform(glm::vec3 direction, float speed);
 

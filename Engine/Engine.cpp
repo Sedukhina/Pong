@@ -11,7 +11,7 @@ Engine::Engine()
 {
     CurrentAssetManager = std::make_shared<AssetManager>();
     Globals::SetAssetManager(CurrentAssetManager.get());
-    CurrentRenderer = std::make_unique<Renderer>();
+    CurrentRenderer = std::make_shared<Renderer>();
     CurrentRenderer->InitRenderer();
     CurrentInputManager = std::make_shared<InputManager>();
     CurrentInputManager->BindInput(std::bind(&Engine::SetShouldShutdownTrue, this), InputKey::ESC, InputAction::PRESSED);
@@ -20,10 +20,6 @@ Engine::Engine()
     Globals::SetSoundPlayer(CurrentSoundPlayer.get());
 }
 
-Engine::~Engine()
-{
-
-}
 
 void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
 {

@@ -1,16 +1,10 @@
 #include "Renderer.h"
-#include "ShaderProgram.h"
+#include "Render/ShaderProgram.h"
 #include "InputCallback.h"
 #include "Log.h"
 #include "Assets/Model.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-unsigned int VBO, VAO;
-
-Renderer::Renderer()
-{
-}
 
 bool Renderer::InitRenderer()
 {

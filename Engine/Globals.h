@@ -9,9 +9,6 @@
 class Globals
 {
 public:
-	Globals() {};
-	~Globals() {};
-
 	static void SetTimeFreezed(bool NewValue);
 	static bool GetTimeFreezed();
 
