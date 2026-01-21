@@ -45,7 +45,7 @@ void Ball::StartRound()
 
 	static std::random_device RandomDevice;
 	static std::mt19937 Generator(RandomDevice());
-	static std::uniform_real_distribution<float> Distribution(-0.1f, 1.f);
+	static std::uniform_real_distribution<float> Distribution(-1.f, 1.f);
 	Direction = glm::normalize(glm::vec2(Distribution(Generator), Distribution(Generator)));
 }
 
@@ -73,7 +73,7 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 		if (ActorDistance == 0.f)
 		{
 			Direction = -Direction;
-			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 2.f);
+			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 4.f);
 			SetPosition(NewPosition);
 			Globals::GetSoundPlayer()->PlaySoundFromFile(PlatformSound);
 			return;

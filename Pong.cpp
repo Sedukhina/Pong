@@ -27,7 +27,7 @@ void Pong::CreateLevelAndGameState()
     PongLevel->AddUIOnLevel(Player2ScoreUI);
     PongLevel->AddActorOnLevel(Player1);
     PongLevel->AddActorOnLevel(Player2);
-    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 20.f);
+    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 35.f);
     PongLevel->AddActorOnLevel(PongBall);
     
     GameState = std::make_shared < PongGameState>( 10, Player1ScoreUI, Player2ScoreUI );
