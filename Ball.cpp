@@ -45,8 +45,11 @@ void Ball::StartRound()
 
 	static std::random_device RandomDevice;
 	static std::mt19937 Generator(RandomDevice());
-	static std::uniform_real_distribution<float> Distribution(-1.f, 1.f);
-	Direction = glm::normalize(glm::vec2(Distribution(Generator), Distribution(Generator)));
+	static std::bernoulli_distribution SignDistribution(0.5);
+	static std::uniform_real_distribution<float> Distribution(0.1f, 1.f);
+	Direction.x = Distribution(Generator) * (SignDistribution(Generator) ? 1.f : -1.f);
+	Direction.y = Distribution(Generator) * (SignDistribution(Generator) ? 1.f : -1.f);
+	Direction = glm::normalize(Direction);
 }
 
 void Ball::EndRound(PongPlayer Player)

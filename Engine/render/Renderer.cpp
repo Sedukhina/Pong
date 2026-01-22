@@ -4,9 +4,10 @@
 #include "Log.h"
 #include "Assets/Model.h"
 #include "Assets/AssetManager.h"
-#include "Scene/Level.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Scene/Actor.h"
+#include "Scene/UI/TextUI.h"
 
 bool Renderer::InitRenderer()
 {
@@ -81,20 +82,19 @@ bool Renderer::InitRenderer()
 	return true;
 }
 
-void Renderer::Tick(float DeltaTime)
+void Renderer::BeginFrame()
 {
-	Level* CurrentLevel = Globals::GetLevel();
-	if (!CurrentLevel)
-	{
-		return;
-	}
 	glClearColor(0.05f, 0.2f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
 
-	RenderModels(DeltaTime, CurrentLevel);
-	RenderTextUIs(DeltaTime, CurrentLevel);
-	
+void Renderer::EndFrame()
+{
 	glfwSwapBuffers(window);
+}
+
+void Renderer::PollWindowEvents()
+{
 	glfwPollEvents();
 }
 
@@ -110,17 +110,17 @@ Renderer::~Renderer()
 	glfwTerminate();
 }
 
-void Renderer::RenderModels(float DeltaTime, Level* CurrentLevel)
+void Renderer::RenderModels(const std::vector<std::shared_ptr<Actor>>& Actors)
 {
 	ModelsShaderProgram->Use();
 	glActiveTexture(GL_TEXTURE0);
-	const auto& ActorsOnLevel = CurrentLevel->GetActorsOnLevel();
-	for (const auto& ActorOnLevel : ActorsOnLevel)
+
+	for (const auto& CurrentActor : Actors)
 	{
-		glm::mat4 ModelMatrix = ActorOnLevel->GetModelMatrix();
+		glm::mat4 ModelMatrix = CurrentActor->GetModelMatrix();
 		glUniformMatrix4fv(ModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(ModelMatrix));
 
-		const std::vector<std::shared_ptr<Model>> Models = ActorOnLevel->GetActorsModels();
+		const std::vector<std::shared_ptr<Model>>& Models = CurrentActor->GetActorsModels();
 		for (std::shared_ptr<Model> ActorsModel : Models)
 		{
 			AssetManager* AssetMan = Globals::GetAssetManager();
@@ -134,7 +134,7 @@ void Renderer::RenderModels(float DeltaTime, Level* CurrentLevel)
 	}
 }
 
-void Renderer::RenderTextUIs(float DeltaTime, Level* CurrentLevel)
+void Renderer::RenderTextUIs(const std::vector<std::shared_ptr<TextUI>>& TextUIs)
 {
 	TextShaderProgram->Use();
 	GLuint Atlas = Globals::GetAssetManager()->GetFontAtlas();
@@ -144,8 +144,7 @@ void Renderer::RenderTextUIs(float DeltaTime, Level* CurrentLevel)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	const auto& TextUIsOnLevel = CurrentLevel->GetTextUIsOnLevel();
-	for (const auto& CurTextUI : TextUIsOnLevel)
+	for (const auto& CurTextUI : TextUIs)
 	{
 		glm::mat4 ModelMatrix = CurTextUI->GetModelMatrix();
 		glUniformMatrix4fv(TextSPModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(ModelMatrix));

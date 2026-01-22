@@ -36,6 +36,11 @@ SoundPlayer* Globals::GetSoundPlayer()
 	return CurrentSoundPlayer;
 }
 
+Renderer* Globals::GetRenderer()
+{
+	return CurrentRenderer;
+}
+
 void Globals::SetInputManager(InputManager* NewInputManagerPtr)
 {
 	CurrentInputManager = NewInputManagerPtr;
@@ -44,6 +49,11 @@ void Globals::SetInputManager(InputManager* NewInputManagerPtr)
 void Globals::SetAssetManager(AssetManager* NewAssetManagerPtr)
 {
 	CurrentAssetManager = NewAssetManagerPtr;
+}
+
+void Globals::SetRenderer(Renderer* NewRendererPtr)
+{
+	CurrentRenderer = NewRendererPtr;
 }
 
 void Globals::SetLevel(Level* NewLevel)

@@ -3,7 +3,7 @@
 // Windowing library
 #include <GLFW/glfw3.h>
 #include "glm/glm.hpp"
-
+#include <vector>
 #include <memory>
 
 class Renderer
@@ -11,16 +11,19 @@ class Renderer
 public:
 	Renderer() = default;
 	bool InitRenderer();  
-	
-	void Tick(float DeltaTime);
+
+	void BeginFrame();
+	void EndFrame();
+
+	void RenderModels(const std::vector<std::shared_ptr<class Actor>>& Actors);
+	void RenderTextUIs(const std::vector<std::shared_ptr<class TextUI>>& TextUIsOnLevel);
+
+	void PollWindowEvents();
 	bool GetWindowShouldCLose();
 
 	~Renderer();
 
 private:
-	void RenderModels(float DeltaTime, class Level* CurrentLevel);
-	void RenderTextUIs(float DeltaTime, class Level* CurrentLevel);
-
 	GLFWwindow* window;
 
 	float ScreenRatio;

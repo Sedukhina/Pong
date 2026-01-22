@@ -15,6 +15,7 @@ Engine::Engine()
     Globals::SetAssetManager(CurrentAssetManager.get());
     CurrentRenderer = std::make_shared<Renderer>();
     CurrentRenderer->InitRenderer();
+    Globals::SetRenderer(CurrentRenderer.get());
     CurrentInputManager = std::make_shared<InputManager>();
     CurrentInputManager->BindInput(std::bind(&Engine::SetShouldShutdownTrue, this), InputKey::ESC, InputAction::PRESSED);
     Globals::SetInputManager(CurrentInputManager.get());
@@ -32,6 +33,8 @@ void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
     CurrentGameState->BindFunctionOnEndgame(std::bind(&Globals::SetTimeFreezed, true));
     while (!ShouldShutdown && !CurrentRenderer->GetWindowShouldCLose())
     {
+        CurrentRenderer->PollWindowEvents();
+        CurrentRenderer->BeginFrame();
         if (!Globals::GetTimeFreezed())
         {
             DeltaTime = std::chrono::duration<float>(std::chrono::steady_clock::now() - LastFrame).count();
@@ -42,7 +45,7 @@ void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
             DeltaTime = 0;
         }
         CurrentLevel->Tick(DeltaTime);
-        CurrentRenderer->Tick(DeltaTime);
+        CurrentRenderer->EndFrame();
     }
     Globals::SetLevel(nullptr);
 }
