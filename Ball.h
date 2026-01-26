@@ -7,7 +7,8 @@ class Ball : public Actor
 {
 public:
 	Ball(float radius, float speed);
-	void BindFunctionOnEndRound(std::function<void(PongPlayer)> func);
+	void BindFunctionOnEndRound(std::function<void(PongPlayer)> Func);
+	void BindFunctionOnPlatformCollision(std::function<void()> Func);
 	virtual void Tick(float DeltaTime) override;
 
 protected:
@@ -15,6 +16,9 @@ protected:
 
 	void EndRound(PongPlayer PlayerWinner);
 	std::vector<std::function<void(PongPlayer)>> OnRoundEndBindedFunctions;
+
+	void PlatfomCollision();
+	std::vector<std::function<void()>> OnPlatformCollision;
 
 	void MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, float Step);
 	// Returns contact normal
@@ -26,6 +30,4 @@ protected:
 	const float Radius;
 	float Speed = 0.f;
 	glm::vec2 Direction = glm::vec2(0.f);
-
-	std::string EndRoundSound = "LostRound.mp3";
 };

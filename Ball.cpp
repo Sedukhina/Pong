@@ -25,9 +25,14 @@ Ball::Ball(float radius, float speed)
 	StartRound();
 }
 
-void Ball::BindFunctionOnEndRound(std::function<void(PongPlayer)> func)
+void Ball::BindFunctionOnEndRound(std::function<void(PongPlayer)> Func)
 {
-	OnRoundEndBindedFunctions.push_back(func);
+	OnRoundEndBindedFunctions.push_back(Func);
+}
+
+void Ball::BindFunctionOnPlatformCollision(std::function<void()> Func)
+{
+	OnPlatformCollision.push_back(Func);
 }
 
 void Ball::Tick(float DeltaTime)
@@ -63,10 +68,17 @@ void Ball::EndRound(PongPlayer Player)
 	StartRound();
 }
 
+void Ball::PlatfomCollision()
+{
+	for (std::function<void()> Function : OnPlatformCollision)
+	{
+		std::invoke(Function);
+	}
+}
+
 void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, float Step)
 {
 	// For platform collision
-	static constexpr auto PlatformSound = "Platform.mp3";
 	glm::vec3 NewPosition = GetPosition();
 	while (Step > 0.005f)
 	{
@@ -80,7 +92,7 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 			Direction = -Direction;
 			NewPosition += glm::vec3(Direction, 0.f) * (Radius + 4.f);
 			SetPosition(NewPosition);
-			Globals::GetSoundPlayer()->PlaySoundFromFile(PlatformSound);
+			PlatfomCollision();
 			return;
 		}
 		// No collision
@@ -112,7 +124,7 @@ void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, fl
 			NewPosition += glm::vec3(Direction, 0.f) * .5f;
 			Step -= ActorDistance;
 			SetPosition(NewPosition);
-			Globals::GetSoundPlayer()->PlaySoundFromFile(PlatformSound);
+			PlatfomCollision();
 		}
 	}
 
