@@ -18,8 +18,25 @@ PlayerPlatform::PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3
 	this->AddCollision(CollsionBox);
 
 	// Binding input
-	Globals::GetInputManager()->BindInput(std::bind(&PlayerPlatform::MovePlatform, this, glm::vec3(0.f, 1.f, 0.f), PlatformSpeed), MovePlatformUpKey, InputAction::PRESSED);
-	Globals::GetInputManager()->BindInput(std::bind(&PlayerPlatform::MovePlatform, this, glm::vec3(0.f, 1.f, 0.f), -PlatformSpeed), MovePlatformDownKey, InputAction::PRESSED);
+	Globals::GetInputManager()->BindInput(std::bind(&PlayerPlatform::RequestPlatformMovement, this, glm::vec3(0.f, 1.f, 0.f)), MovePlatformUpKey, InputAction::PRESSED);
+	Globals::GetInputManager()->BindInput(std::bind(&PlayerPlatform::RequestPlatformMovement, this, glm::vec3(0.f, -1.f, 0.f)), MovePlatformDownKey, InputAction::PRESSED);
+	Globals::GetInputManager()->BindInput(std::bind(&PlayerPlatform::RequestPlatformMovement, this, glm::vec3(0.f, 1.f, 0.f)), MovePlatformUpKey, InputAction::REPEATED);
+	Globals::GetInputManager()->BindInput(std::bind(&PlayerPlatform::RequestPlatformMovement, this, glm::vec3(0.f, -1.f, 0.f)), MovePlatformDownKey, InputAction::REPEATED);
+}
+
+void PlayerPlatform::Tick(float DeltaTime)
+{
+	Actor::Tick(DeltaTime);
+	if (RequestedDirection != glm::vec3(0.f))
+	{
+		MovePlatform(glm::normalize(RequestedDirection), PlatformSpeed * DeltaTime);
+		RequestedDirection = glm::vec3(0.f);
+	}
+}
+
+void PlayerPlatform::RequestPlatformMovement(glm::vec3 direction)
+{
+	RequestedDirection += direction;
 }
 
 void PlayerPlatform::MovePlatform(glm::vec3 direction, float step)

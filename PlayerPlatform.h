@@ -6,10 +6,15 @@ class PlayerPlatform : public Actor
 public:
 	PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, InputKey UpKey, InputKey DownKey);
 
-	void MovePlatform(glm::vec3 direction, float speed);
+	virtual void Tick(float DeltaTime) override;
+	void RequestPlatformMovement(glm::vec3 direction);
 
 protected:
-	float PlatformSpeed = 5.f;
+	void MovePlatform(glm::vec3 direction, float step);
+
+	float PlatformSpeed = 150.f;
+
+	glm::vec3 RequestedDirection = glm::vec3();
 
 	InputKey MovePlatformUpKey;
 	InputKey MovePlatformDownKey;
