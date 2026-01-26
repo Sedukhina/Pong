@@ -10,6 +10,7 @@ public:
 
 private:
 	void CreateLevelAndGameState();
+	void EndPongGame(PongPlayer Player);
 
 	std::shared_ptr <Engine> CurEngine;
 	std::shared_ptr <Level> PongLevel;
