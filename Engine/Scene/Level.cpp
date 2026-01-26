@@ -8,9 +8,6 @@ void Level::Tick(float DeltaTime)
 	{
 		ActorOnLevel->Tick(DeltaTime);
 	}
-	Renderer* CurrentRenderer = Globals::GetRenderer();
-	CurrentRenderer->RenderModels(GetActorsOnLevel());
-	CurrentRenderer->RenderTextUIs(GetTextUIsOnLevel());
 }
 
 void Level::AddActorOnLevel(std::shared_ptr<Actor> NewActor)

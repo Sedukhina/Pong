@@ -4,7 +4,6 @@ class InputManager;
 class AssetManager;
 class Level;
 class SoundPlayer;
-class Renderer;
 
 class Globals
 {
@@ -16,11 +15,9 @@ public:
 	static AssetManager* GetAssetManager();
 	static Level* GetLevel();
 	static SoundPlayer* GetSoundPlayer();
-	static Renderer* GetRenderer();
 
 	static void SetInputManager(InputManager* NewInputManagerPtr);
 	static void SetAssetManager(AssetManager* NewAssetManagerPtr);
-	static void SetRenderer(Renderer* NewRendererPtr);
 	static void SetLevel(Level* NewLevel);
 	static void SetSoundPlayer(SoundPlayer* NewSoundPlayer);
 
@@ -35,7 +32,6 @@ private:
 	inline static AssetManager* CurrentAssetManager = nullptr;
 	inline static Level* CurrentLevel = nullptr;
 	inline static SoundPlayer* CurrentSoundPlayer = nullptr;
-	inline static Renderer* CurrentRenderer = nullptr;
 
 	// Used to define min/max screen coordinates
 	inline static const float ScreenHalfWidth = 50.f;

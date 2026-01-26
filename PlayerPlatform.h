@@ -12,7 +12,7 @@ public:
 protected:
 	void MovePlatform(glm::vec3 direction, float step);
 
-	float PlatformSpeed = 150.f;
+	float PlatformSpeed = 250.f;
 
 	glm::vec3 RequestedDirection = glm::vec3();
 
