@@ -8,17 +8,26 @@
 #include "Log.h"
 #include "Assets/SoundPlayer.h"
 #include <time.h>
+#include "Input/InputCallback.h"
 
 Engine::Engine()
 {
     CurrentAssetManager = std::make_shared<AssetManager>();
+    CreateEngineWindow();
     Globals::SetAssetManager(CurrentAssetManager.get());
-    CurrentRenderer = std::make_shared<Renderer>();
+    CurrentRenderer = std::make_shared<Renderer>(Window);
     CurrentInputManager = std::make_shared<InputManager>();
     CurrentInputManager->BindInput(std::bind(&Engine::SetShouldShutdownTrue, this), InputKey::ESC, InputAction::PRESSED);
     Globals::SetInputManager(CurrentInputManager.get());
     CurrentSoundPlayer = std::make_shared<SoundPlayer>();
     Globals::SetSoundPlayer(CurrentSoundPlayer.get());
+}
+
+Engine::~Engine()
+{
+    glfwSetWindowShouldClose(Window, GL_TRUE);
+    glfwDestroyWindow(Window);
+    glfwTerminate();
 }
 
 
@@ -30,10 +39,10 @@ void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
     Globals::SetLevel(CurrentLevel);
     CurrentGameState->BindFunctionOnEndgame(std::bind(&Globals::SetTimeFreezed, true));
 
-    while (!ShouldShutdown && !CurrentRenderer->GetWindowShouldCLose())
+    while (!ShouldShutdown && !glfwWindowShouldClose(Window))
     {
         // Polling events
-        CurrentRenderer->PollWindowEvents();
+        glfwPollEvents();
 
         // Updating delta time
         if (!Globals::GetTimeFreezed())
@@ -61,5 +70,28 @@ void Engine::Run(Level* CurrentLevel, GameState* CurrentGameState)
 void Engine::SetShouldShutdownTrue()
 {
     ShouldShutdown = true;
+}
+
+void Engine::CreateEngineWindow()
+{
+    // Window setting section
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    Window = glfwCreateWindow(static_cast<int>(mode->width * 0.8f), static_cast<int>(mode->height * 0.8f), "Pong", nullptr, nullptr);
+    Globals::SetScreenRatio(static_cast<float>(mode->width) / static_cast<float>(mode->height));
+
+    if (Window == nullptr)
+    {
+        LOG_FATAL("Failed to create GLFW window");
+        glfwTerminate();
+        throw std::runtime_error("Failed to create GLFW window");
+    }
+    glfwMakeContextCurrent(Window);
+
+    glfwSetKeyCallback(Window, key_callback);
 }
 

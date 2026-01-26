@@ -9,18 +9,13 @@
 class Renderer
 {
 public:
-	Renderer();
+	Renderer(GLFWwindow* Window);
 
 	void BeginFrame();
 	void EndFrame();
 
 	void RenderModels(const std::vector<std::shared_ptr<class Actor>>& Actors);
 	void RenderTextUIs(const std::vector<std::shared_ptr<class TextUI>>& TextUIsOnLevel);
-
-	void PollWindowEvents();
-	bool GetWindowShouldCLose();
-
-	~Renderer();
 
 private:
 	GLFWwindow* Window = nullptr;

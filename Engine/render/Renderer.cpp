@@ -1,6 +1,5 @@
 #include "Renderer.h"
 #include "Render/ShaderProgram.h"
-#include "InputCallback.h"
 #include "Log.h"
 #include "Assets/Model.h"
 #include "Assets/AssetManager.h"
@@ -8,29 +7,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Scene/Actor.h"
 #include "Scene/UI/TextUI.h"
+#include "Globals.h"
 
-Renderer::Renderer()
+Renderer::Renderer(GLFWwindow* window) : Window(window)
 {
-	// Window setting section
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	Window = glfwCreateWindow(static_cast<int>(mode->width * 0.8f), static_cast<int>(mode->height * 0.8f), "Pong", nullptr, nullptr);
-	Globals::SetScreenRatio(static_cast<float>(mode->width) / static_cast<float>(mode->height));
-
-	if (Window == nullptr)
-	{
-		LOG_FATAL("Failed to create GLFW window");
-		glfwTerminate();
-		throw std::runtime_error("Failed to create GLFW window");
-	}
-	glfwMakeContextCurrent(Window);
-
-	glfwSetKeyCallback(Window, key_callback);
-
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
@@ -89,23 +69,6 @@ void Renderer::BeginFrame()
 void Renderer::EndFrame()
 {
 	glfwSwapBuffers(Window);
-}
-
-void Renderer::PollWindowEvents()
-{
-	glfwPollEvents();
-}
-
-bool Renderer::GetWindowShouldCLose()
-{
-	return glfwWindowShouldClose(Window);
-}
-
-Renderer::~Renderer()
-{
-	glfwSetWindowShouldClose(Window, GL_TRUE);
-	glfwDestroyWindow(Window);
-	glfwTerminate();
 }
 
 void Renderer::RenderModels(const std::vector<std::shared_ptr<Actor>>& Actors)
