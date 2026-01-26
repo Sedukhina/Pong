@@ -18,8 +18,8 @@ Renderer::Renderer()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	Window = glfwCreateWindow((int)(mode->width * 0.8f), (int)(mode->height * 0.8f), "Pong", nullptr, nullptr);
-	Globals::SetScreenRatio((float)mode->width / (float)mode->height);
+	Window = glfwCreateWindow(static_cast<int>(mode->width * 0.8f), static_cast<int>(mode->height * 0.8f), "Pong", nullptr, nullptr);
+	Globals::SetScreenRatio(static_cast<float>(mode->width) / static_cast<float>(mode->height));
 
 	if (Window == nullptr)
 	{
