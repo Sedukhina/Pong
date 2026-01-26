@@ -16,8 +16,8 @@ protected:
 
 	glm::vec3 RequestedDirection = glm::vec3();
 
-	InputKey MovePlatformUpKey;
-	InputKey MovePlatformDownKey;
+	InputKey MovePlatformUpKey = InputKey::W;
+	InputKey MovePlatformDownKey = InputKey::S;
 
 	inline static constexpr auto MeshPath = "DonutPainting.fbx";
 	inline static constexpr auto TexturePath = "Donut_tex.jpg";
