@@ -20,13 +20,18 @@ void Pong::CreateLevelAndGameState()
 	PongLevel = std::make_shared<Level>();
     
     // Player pltfroms
-    std::shared_ptr<PlayerPlatform> Player1 = std::make_shared<PlayerPlatform>(glm::vec3(44.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 4.f, 1.f), InputKey::UP, InputKey::DOWN);
-    std::shared_ptr<PlayerPlatform> Player2 = std::make_shared<PlayerPlatform>(glm::vec3(-44.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 4.f, 1.f), InputKey::W, InputKey::S);
+    // Setting visual representation
+    static constexpr auto PlatformMeshPath = "DonutPainting.fbx";
+    static constexpr auto PlatformTexturePath = "Donut_tex.jpg";
+    std::shared_ptr<Model> PlatformModel = std::make_shared<Model>(PlatformMeshPath, PlatformTexturePath);
+    std::shared_ptr<PlayerPlatform> Player1 = std::make_shared<PlayerPlatform>(glm::vec3(44.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 4.f, 1.f), InputKey::UP, InputKey::DOWN, PlatformModel);
+    std::shared_ptr<PlayerPlatform> Player2 = std::make_shared<PlayerPlatform>(glm::vec3(-44.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(1.f, 4.f, 1.f), InputKey::W, InputKey::S, PlatformModel);
     PongLevel->AddActorOnLevel(Player1);
     PongLevel->AddActorOnLevel(Player2);
     
     // Ball
-    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 35.f);
+    static constexpr auto BallTexturePath = "ink.jpg";
+    std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 35.f, BallTexturePath);
     constexpr auto EndRoundSound = "LostRound.mp3";
     PongBall->BindFunctionOnEndRound(std::bind(& SoundPlayer::PlaySoundFromFile, Globals::GetSoundPlayer(), EndRoundSound));
     constexpr auto PlatformHitSound = "Platform.mp3";

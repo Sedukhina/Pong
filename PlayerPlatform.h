@@ -4,7 +4,7 @@
 class PlayerPlatform : public Actor
 {
 public:
-	PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, InputKey UpKey, InputKey DownKey);
+	PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, InputKey UpKey, InputKey DownKey, std::shared_ptr<Model> PlatformModel);
 
 	virtual void Tick(float DeltaTime) override;
 	void RequestPlatformMovement(glm::vec3 direction);

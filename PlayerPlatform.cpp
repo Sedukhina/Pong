@@ -5,17 +5,13 @@
 #include "Assets/AssetManager.h"
 #include <glm/gtx/norm.hpp> 
 
-PlayerPlatform::PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, InputKey UpKey, InputKey DownKey)
+PlayerPlatform::PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, InputKey UpKey, InputKey DownKey, std::shared_ptr<Model> PlatformModel)
 	: Actor(position, rotation, scale), MovePlatformUpKey(UpKey), MovePlatformDownKey(DownKey)
 {
-	// Setting visual representation
-	static constexpr auto MeshPath = "DonutPainting.fbx";
-	static constexpr auto TexturePath = "Donut_tex.jpg";
-	std::shared_ptr<Model> PlatformModel = std::make_shared<Model>( MeshPath, TexturePath );
 	this->AddModel(PlatformModel);
 
 	// Setting collision
-	std::array<glm::vec2, 2> AABB = Globals::GetAssetManager()->GetMeshAABB(MeshPath, GetAssetID(MeshPath));
+	std::array<glm::vec2, 2> AABB = Globals::GetAssetManager()->GetMeshAABB(PlatformModel->GetMeshPath(), GetAssetID(PlatformModel->GetMeshPath()));
 	std::shared_ptr<fcl::Boxf> CollsionBox = std::make_shared<fcl::Boxf>(GetScale().x * (AABB[1].x - AABB[0].x), GetScale().y * (AABB[1].y - AABB[0].y), GetScale().z);
 	this->AddCollision(CollsionBox);
 

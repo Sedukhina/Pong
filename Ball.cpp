@@ -9,11 +9,10 @@
 #include <random>
 
 
-Ball::Ball(float radius, float speed)
+Ball::Ball(float radius, float speed, std::string TexturePath)
 	: Speed(speed), Radius(radius)
 {
 	std::filesystem::path MeshPath = GeneratePathForCircle(radius, Segments);
-	static constexpr auto TexturePath = "ink.jpg";
 	std::shared_ptr<Model> BallModel = std::make_shared<Model>(MeshPath, TexturePath);
 	// Setting collision
 	std::array<glm::vec2, 2> AABB = Globals::GetAssetManager()->GetMeshAABB(MeshPath, GetAssetID(MeshPath));

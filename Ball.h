@@ -6,7 +6,7 @@
 class Ball : public Actor
 {
 public:
-	Ball(float radius, float speed);
+	Ball(float radius, float speed, std::string TexturePath);
 	void BindFunctionOnEndRound(std::function<void(PongPlayer)> Func);
 	void BindFunctionOnPlatformCollision(std::function<void()> Func);
 	virtual void Tick(float DeltaTime) override;
