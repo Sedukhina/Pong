@@ -8,10 +8,12 @@
 #include "Assets/SoundPlayer.h"
 #include <random>
 
+
 Ball::Ball(float radius, float speed)
 	: Speed(speed), Radius(radius)
 {
 	std::filesystem::path MeshPath = GeneratePathForCircle(radius, Segments);
+	static constexpr auto TexturePath = "ink.jpg";
 	std::shared_ptr<Model> BallModel = std::make_shared<Model>(MeshPath, TexturePath);
 	// Setting collision
 	std::array<glm::vec2, 2> AABB = Globals::GetAssetManager()->GetMeshAABB(MeshPath, GetAssetID(MeshPath));
@@ -54,6 +56,7 @@ void Ball::StartRound()
 
 void Ball::EndRound(PongPlayer Player)
 {
+	static constexpr auto EndRoundSound = "LostRound.mp3";
 	Globals::GetSoundPlayer()->PlaySoundFromFile(EndRoundSound);
 	for (std::function<void(PongPlayer)> EndGameFunction : OnRoundEndBindedFunctions)
 	{
@@ -64,11 +67,12 @@ void Ball::EndRound(PongPlayer Player)
 
 void Ball::MoveBall(const std::vector<std::shared_ptr<Actor>> &ActorsOnLevel, float Step)
 {
+	// For platform collision
+	static constexpr auto PlatformSound = "Platform.mp3";
 	glm::vec3 NewPosition = GetPosition();
 	while (Step > 0.005f)
 	{
 		float ActorDistance = -1.f;
-		Actor* OtherActor = nullptr;
 		glm::vec2 ContactNormal = CheckCollisionWithActors(ActorsOnLevel, Step, &ActorDistance);
 		float WallDistance = -1;
 		std::array<bool, 2> Directions = CheckCollisionWithWalls(Step, &WallDistance);

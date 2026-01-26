@@ -18,7 +18,4 @@ protected:
 
 	InputKey MovePlatformUpKey = InputKey::W;
 	InputKey MovePlatformDownKey = InputKey::S;
-
-	inline static constexpr auto MeshPath = "DonutPainting.fbx";
-	inline static constexpr auto TexturePath = "Donut_tex.jpg";
 };

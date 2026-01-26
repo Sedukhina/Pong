@@ -9,6 +9,8 @@ PlayerPlatform::PlayerPlatform(glm::vec3 position, glm::vec3 rotation, glm::vec3
 	: Actor(position, rotation, scale), MovePlatformUpKey(UpKey), MovePlatformDownKey(DownKey)
 {
 	// Setting visual representation
+	static constexpr auto MeshPath = "DonutPainting.fbx";
+	static constexpr auto TexturePath = "Donut_tex.jpg";
 	std::shared_ptr<Model> PlatformModel = std::make_shared<Model>( MeshPath, TexturePath );
 	this->AddModel(PlatformModel);
 
