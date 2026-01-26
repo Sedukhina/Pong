@@ -32,5 +32,5 @@ private:
 
 	std::map<uint64_t, std::unique_ptr<Mesh>> LoadedMeshes;
 	std::map<uint64_t, GLuint> LoadedTextures;
-	GLuint EnginesFontAtlas;
+	GLuint EnginesFontAtlas = -1;
 };

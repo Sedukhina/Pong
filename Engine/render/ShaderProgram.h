@@ -5,7 +5,7 @@
 
 class ShaderProgram {
 private:
-	GLuint Program;
+	GLuint Program = -1;
 public:
 	ShaderProgram(std::filesystem::path pathToVertex, std::filesystem::path pathToFragment);
 

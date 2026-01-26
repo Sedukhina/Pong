@@ -23,7 +23,7 @@ protected:
 	std::string Text;
 	glm::vec4 Color = glm::vec4(1.f);
 
-	GLuint VAO;
-	GLuint VBO;
-	GLuint EBO;
+	GLuint VAO = -1;
+	GLuint VBO = -1;
+	GLuint EBO = 1;
 };

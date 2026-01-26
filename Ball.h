@@ -25,7 +25,7 @@ protected:
 	const int Segments = 32;
 	const float Radius;
 	float Speed = 0.f;
-	glm::vec2 Direction;
+	glm::vec2 Direction = glm::vec2(0.f);
 
 	inline static constexpr auto TexturePath = "ink.jpg";
 	inline static const std::filesystem::path EndRoundSound = "LostRound.mp3";

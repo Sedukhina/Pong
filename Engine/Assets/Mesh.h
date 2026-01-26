@@ -21,8 +21,8 @@ public:
 private:
 	GLenum DrawingMode = GL_TRIANGLES;
 
-	glm::vec2 MinCoords;
-	glm::vec2 MaxCoords;
+	glm::vec2 MinCoords = glm::vec2(0.f);
+	glm::vec2 MaxCoords = glm::vec2(0.f);
 
 	const GLuint VAO;
 	const GLuint VBO;
