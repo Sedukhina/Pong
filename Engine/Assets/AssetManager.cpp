@@ -22,41 +22,41 @@ stbtt_packedchar PackedChars[CharsToIncludeInFontAtlas];
 
 #include <fstream>
 
-const GLuint AssetManager::GetTextureAddress(std::filesystem::path path, uint64_t ID)
+const GLuint AssetManager::GetTextureAddress(std::filesystem::path Path, uint64_t ID)
 {
 	if (LoadedTextures.find(ID) == LoadedTextures.end())
 	{
-		LoadAsset(path, ID);
+		LoadAsset(Path, ID);
 	}
 	if (LoadedTextures.find(ID) == LoadedTextures.end())
 	{
 		LOG_WARNING("GLuint AssetManager::GetTextureAddress: Provided path to asset doesn't exist: ");
-		LOG_WARNING(path.string().c_str());
+		LOG_WARNING(Path.string().c_str());
 		return 0;
 	}
 	return LoadedTextures[ID];
 }
 
-std::pair <const GLuint, const unsigned int> AssetManager::GetMeshAddressAndIndicesSize(std::filesystem::path path, uint64_t ID)
+std::pair <const GLuint, const unsigned int> AssetManager::GetMeshAddressAndIndicesSize(std::filesystem::path Path, uint64_t ID)
 {
 	if (LoadedMeshes.find(ID) == LoadedMeshes.end())
 	{
-		LoadAsset(path, ID);
+		LoadAsset(Path, ID);
 	}
 	if (LoadedMeshes.find(ID) == LoadedMeshes.end())
 	{
 		LOG_WARNING("GLuint AssetManager::GetMeshAddress: Provided path to asset doesn't exist: ");
-		LOG_WARNING(path.string().c_str());
+		LOG_WARNING(Path.string().c_str());
 		return { 0, 0 };
 	}
 	return { LoadedMeshes[ID]->GetVAO(), LoadedMeshes[ID]->GetIndicesArraySize() };
 }
 
-std::array<glm::vec2, 2> AssetManager::GetMeshAABB(std::filesystem::path path, uint64_t ID)
+std::array<glm::vec2, 2> AssetManager::GetMeshAABB(std::filesystem::path Path, uint64_t ID)
 {
 	if (LoadedMeshes.find(ID) == LoadedMeshes.end())
 	{
-		LoadAsset(path, ID);
+		LoadAsset(Path, ID);
 	}
 	if (LoadedMeshes.find(ID) == LoadedMeshes.end())
 	{
@@ -74,34 +74,34 @@ GLenum AssetManager::GetMeshDrawingMode(uint64_t ID)
 	return LoadedMeshes[ID]->GetDrawingMode();
 }
 
-void AssetManager::LoadAsset(std::filesystem::path path, uint64_t ID)
+void AssetManager::LoadAsset(std::filesystem::path Path, uint64_t ID)
 {
-	AssetType Type = GetAssetType(path);
+	AssetType Type = GetAssetType(Path);
 	if (Type == AssetType::GeneratedMesh)
 	{
-		LoadGeneratedMesh(path, ID);
+		LoadGeneratedMesh(Path, ID);
 		return;
 	}
-	if (!IsExistingPath(&path))
+	if (!IsExistingPath(&Path))
 	{
 		LOG_WARNING("AssetManager::LoadAsset: Provided path to asset doesn't exist: ");
-		LOG_WARNING(path.string().c_str());
-		throw std::runtime_error("AssetManager::LoadAsset: Provided path to asset doesn't exist: " + path.string());
+		LOG_WARNING(Path.string().c_str());
+		throw std::runtime_error("AssetManager::LoadAsset: Provided path to asset doesn't exist: " + Path.string());
 		return;
 	}
 	if (Type == AssetType::Texture)
 	{
-		LoadTexture(path, ID);
+		LoadTexture(Path, ID);
 	}
 	else if (Type == AssetType::Model)
 	{
-		LoadModel(path, ID);
+		LoadModel(Path, ID);
 	}
 	else
 	{
 		LOG_WARNING("Provided path directs to unknown asset type: ");
-		LOG_WARNING(path.string().c_str());
-		throw std::runtime_error("Provided path directs to unknown asset type: " + path.string());
+		LOG_WARNING(Path.string().c_str());
+		throw std::runtime_error("Provided path directs to unknown asset type: " + Path.string());
 	}
 }
 
@@ -128,12 +128,12 @@ void AssetManager::LoadFont()
 	std::ifstream InputFileStream(FontPath, std::ios::binary);
 	// Find the size of the file to allocate memory dynamically
 	InputFileStream.seekg(0, std::ios::end);
-	auto&& size = InputFileStream.tellg();
+	auto&& FileSize = InputFileStream.tellg();
 	InputFileStream.seekg(0, std::ios::beg);
 	// Allocate the buffer
-	uint8_t* FontDataBuf = new uint8_t[static_cast<size_t>(size)];
+	uint8_t* FontDataBuf = new uint8_t[static_cast<size_t>(FileSize)];
 	// Read the font data to the buffer
-	InputFileStream.read((char*)FontDataBuf, size);
+	InputFileStream.read((char*)FontDataBuf, FileSize);
 
 	uint8_t* FontAtlasBitmap = new uint8_t[FontAtlasWidth * FontAtlasHeight];
 
@@ -179,8 +179,8 @@ void AssetManager::GenTextUIVertices(std::string Text, GLuint VBO)
 	std::vector<TextVertex> Vertices;
 	Vertices.reserve(Text.size() * 4);
 
-	float x = 0.f;
-	float y = 0.f;
+	float X = 0.f;
+	float Y = 0.f;
 
 	for (size_t i = 0; i < Text.size(); ++i) {
 		char Character = Text[i];
@@ -190,7 +190,7 @@ void AssetManager::GenTextUIVertices(std::string Text, GLuint VBO)
 		}
 
 		stbtt_aligned_quad AllignedQuad;
-		stbtt_GetPackedQuad(PackedChars, FontAtlasWidth, FontAtlasHeight, Character - CodePointOfFirstChar, &x, &y, &AllignedQuad, 0);
+		stbtt_GetPackedQuad(PackedChars, FontAtlasWidth, FontAtlasHeight, Character - CodePointOfFirstChar, &X, &Y, &AllignedQuad, 0);
 
 		TextVertex BottomLeft;
 		BottomLeft.PositionX = AllignedQuad.x0;

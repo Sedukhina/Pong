@@ -7,7 +7,7 @@ class GameState
 public:
 	GameState() = default;
 
-	void BindFunctionOnEndgame(std::function<void()> func);
+	void BindFunctionOnEndgame(std::function<void()> Function);
 
 protected:
 	void EndGame();

@@ -14,7 +14,6 @@ Engine::Engine()
     CurrentAssetManager = std::make_shared<AssetManager>();
     Globals::SetAssetManager(CurrentAssetManager.get());
     CurrentRenderer = std::make_shared<Renderer>();
-    CurrentRenderer->InitRenderer();
     Globals::SetRenderer(CurrentRenderer.get());
     CurrentInputManager = std::make_shared<InputManager>();
     CurrentInputManager->BindInput(std::bind(&Engine::SetShouldShutdownTrue, this), InputKey::ESC, InputAction::PRESSED);

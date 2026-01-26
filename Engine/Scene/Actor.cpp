@@ -8,8 +8,8 @@ Actor::Actor() :
 
 }
 
-Actor::Actor(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
-	: SceneObject(position, rotation, scale)
+Actor::Actor(glm::vec3 ActorPosition, glm::vec3 ActorRotation, glm::vec3 ActorScale)
+	: SceneObject(ActorPosition, ActorRotation, ActorScale)
 {
 }
 
@@ -18,9 +18,9 @@ void Actor::AddModel(std::shared_ptr<Model> NewModel)
 	ActorModels.push_back(NewModel);
 }
 
-void Actor::AddCollision(std::shared_ptr<fcl::CollisionGeometryf> collision)
+void Actor::AddCollision(std::shared_ptr<fcl::CollisionGeometryf> NewCollision)
 {
-	ActorCollision = std::make_shared<fcl::CollisionObjectf>(collision);
+	ActorCollision = std::make_shared<fcl::CollisionObjectf>(NewCollision);
 	glm::vec3 Pos = GetPosition();
 	ActorCollision->setTranslation(fcl::Vector3f(Pos.x, Pos.y, Pos.z));
 	glm::quat Rotation = GetRotation();

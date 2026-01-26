@@ -10,10 +10,10 @@ class Level
 public:
 	void Tick(float DeltaTime);
 
-	void AddActorOnLevel(std::shared_ptr<Actor> actor);
+	void AddActorOnLevel(std::shared_ptr<Actor> NewActor);
 	const std::vector<std::shared_ptr<Actor>>& GetActorsOnLevel() const;
 
-	void AddUIOnLevel(std::shared_ptr<TextUI> actor);
+	void AddUIOnLevel(std::shared_ptr<TextUI> NewActor);
 	const std::vector<std::shared_ptr<TextUI>>& GetTextUIsOnLevel() const;
 
 private:

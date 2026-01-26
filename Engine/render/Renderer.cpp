@@ -9,7 +9,7 @@
 #include "Scene/Actor.h"
 #include "Scene/UI/TextUI.h"
 
-bool Renderer::InitRenderer()
+Renderer::Renderer()
 {
 	// Window setting section
 	glfwInit();
@@ -18,31 +18,31 @@ bool Renderer::InitRenderer()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	window = glfwCreateWindow((int)(mode->width * 0.8f), (int)(mode->height * 0.8f), "Pong", nullptr, nullptr);
+	Window = glfwCreateWindow((int)(mode->width * 0.8f), (int)(mode->height * 0.8f), "Pong", nullptr, nullptr);
 	Globals::SetScreenRatio((float)mode->width / (float)mode->height);
 
-	if (window == nullptr)
+	if (Window == nullptr)
 	{
 		LOG_FATAL("Failed to create GLFW window");
 		glfwTerminate();
-		return false;
+		throw std::runtime_error("Failed to create GLFW window");
 	}
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(Window);
 
-	glfwSetKeyCallback(window, key_callback);
+	glfwSetKeyCallback(Window, key_callback);
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
 		LOG_FATAL("Failed to initialize GLEW");
-		glfwDestroyWindow(window);
+		glfwDestroyWindow(Window);
 		glfwTerminate();
-		return false;
+		throw std::runtime_error("Failed to initialize GLEW");
 	}
 
 	/*Setting Viewport size*/
 	int screenWidth, screenHeight;
-	glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
+	glfwGetFramebufferSize(Window, &screenWidth, &screenHeight);
 	glViewport(0, 0, screenWidth, screenHeight);
 	ScreenRatio = (GLfloat)screenWidth / (GLfloat)screenHeight;
 
@@ -78,8 +78,6 @@ bool Renderer::InitRenderer()
 	glActiveTexture(GL_TEXTURE0);
 	TextSPFontAtlasLocation = TextShaderProgram->GetUniformLocation("FontAtlas");
 	glUniform1i(TextSPFontAtlasLocation, 0);
-
-	return true;
 }
 
 void Renderer::BeginFrame()
@@ -90,7 +88,7 @@ void Renderer::BeginFrame()
 
 void Renderer::EndFrame()
 {
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(Window);
 }
 
 void Renderer::PollWindowEvents()
@@ -100,13 +98,13 @@ void Renderer::PollWindowEvents()
 
 bool Renderer::GetWindowShouldCLose()
 {
-	return glfwWindowShouldClose(window);
+	return glfwWindowShouldClose(Window);
 }
 
 Renderer::~Renderer()
 {
-	glfwSetWindowShouldClose(window, GL_TRUE);
-	glfwDestroyWindow(window);
+	glfwSetWindowShouldClose(Window, GL_TRUE);
+	glfwDestroyWindow(Window);
 	glfwTerminate();
 }
 

@@ -9,8 +9,7 @@
 class Renderer
 {
 public:
-	Renderer() = default;
-	bool InitRenderer();  
+	Renderer();
 
 	void BeginFrame();
 	void EndFrame();
@@ -24,23 +23,23 @@ public:
 	~Renderer();
 
 private:
-	GLFWwindow* window;
+	GLFWwindow* Window = nullptr;
 
-	float ScreenRatio;
-
-	// Uniforms for shaders
-	GLint CameraMatrixLocation; 
-	GLint ModelMatrixLocation;
-	GLint BaseTexture;
-	std::shared_ptr<class ShaderProgram> ModelsShaderProgram;
+	float ScreenRatio = -1;
 
 	// Uniforms for shaders
-	GLint TextSPFontAtlasLocation;
-	GLint TextSPCameraMatrixLocation;
-	GLint TextSPModelMatrixLocation;
-	GLint TextSPColorLocation;
-	std::shared_ptr<class ShaderProgram> TextShaderProgram;
+	GLint CameraMatrixLocation = -1; 
+	GLint ModelMatrixLocation = -1;
+	GLint BaseTexture = -1;
+	std::shared_ptr<class ShaderProgram> ModelsShaderProgram = nullptr;
 
-	glm::mat4 CameraMatrix;
+	// Uniforms for shaders
+	GLint TextSPFontAtlasLocation = -1;
+	GLint TextSPCameraMatrixLocation = -1;
+	GLint TextSPModelMatrixLocation = -1;
+	GLint TextSPColorLocation = -1;
+	std::shared_ptr<class ShaderProgram> TextShaderProgram = nullptr;
+
+	glm::mat4 CameraMatrix = glm::mat4(0);
 };
 

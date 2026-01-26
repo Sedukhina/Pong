@@ -11,12 +11,12 @@ class Actor : public SceneObject
 {
 public:
 	Actor();
-	Actor(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+	Actor(glm::vec3 ActorPosition, glm::vec3 ActorRotation, glm::vec3 ActorScale);
 	
 	virtual void Tick(float DeltaTime) {};
 
 	void AddModel(std::shared_ptr<Model> NewModel);
-	void AddCollision(std::shared_ptr<fcl::CollisionGeometryf> collision);
+	void AddCollision(std::shared_ptr<fcl::CollisionGeometryf> NewCollision);
 
 	const std::vector<std::shared_ptr<Model>>& GetActorsModels() const;
 	const std::shared_ptr<fcl::CollisionObjectf>& GetActorCollision() const;

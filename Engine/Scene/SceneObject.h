@@ -7,8 +7,8 @@ class SceneObject
 {
 public:
 	SceneObject();
-	SceneObject(glm::vec3 position, glm::quat rotation, glm::vec3 scale);
-	SceneObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
+	SceneObject(glm::vec3 ActorPosition, glm::quat ActorRotation, glm::vec3 ActorScale);
+	SceneObject(glm::vec3 ActorPosition, glm::vec3 ActorRotation, glm::vec3 ActorScale);
 
 	const glm::vec3& GetPosition() const;
 	const glm::quat& GetRotation() const;

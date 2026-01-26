@@ -10,5 +10,5 @@ public:
 	ShaderProgram(std::filesystem::path pathToVertex, std::filesystem::path pathToFragment);
 
 	void Use();
-	GLint GetUniformLocation(const char* name);
+	GLint GetUniformLocation(const char* Name);
 };

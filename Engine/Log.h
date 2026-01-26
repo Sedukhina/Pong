@@ -9,7 +9,7 @@ enum class LogLevel
     DEBUG = 4
 };
 
-void Log(LogLevel level, const char* message);
+void Log(LogLevel Level, const char* Message);
 
 #define LOG_FATAL(message) Log(LogLevel::FATAL, message)
 #define LOG_ERROR(message) Log(LogLevel::ERROR, message)

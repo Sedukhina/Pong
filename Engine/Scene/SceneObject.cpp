@@ -7,16 +7,16 @@ SceneObject::SceneObject()
 	UpdateModelMatrix();
 }
 
-SceneObject::SceneObject(glm::vec3 position, glm::quat rotation, glm::vec3 scale)
-	: Position(position), Rotation(rotation), Scale(scale)
+SceneObject::SceneObject(glm::vec3 ActorPosition, glm::quat ActorRotation, glm::vec3 ActorScale)
+	: Position(ActorPosition), Rotation(ActorRotation), Scale(ActorScale)
 {
 	UpdateModelMatrix();
 }
 
-SceneObject::SceneObject(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
-	: Position(position), Scale(scale)
+SceneObject::SceneObject(glm::vec3 ActorPosition, glm::vec3 ActorRotation, glm::vec3 ActorScale)
+	: Position(ActorPosition), Scale(ActorScale)
 {
-	Rotation = glm::vec3(rotation);
+	Rotation = glm::vec3(ActorRotation);
 	UpdateModelMatrix();
 }
 

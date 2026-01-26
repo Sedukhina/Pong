@@ -11,5 +11,5 @@ public:
     void PlaySoundFromFile(std::filesystem::path Path);
 
 private:
-    ma_engine engine;
+    ma_engine Engine;
 };

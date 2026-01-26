@@ -13,9 +13,9 @@ void Level::Tick(float DeltaTime)
 	CurrentRenderer->RenderTextUIs(GetTextUIsOnLevel());
 }
 
-void Level::AddActorOnLevel(std::shared_ptr<Actor> actor)
+void Level::AddActorOnLevel(std::shared_ptr<Actor> NewActor)
 {
-	ActorsOnLevel.push_back(actor);
+	ActorsOnLevel.push_back(NewActor);
 }
 
 const std::vector<std::shared_ptr<Actor>>& Level::GetActorsOnLevel() const
@@ -23,9 +23,9 @@ const std::vector<std::shared_ptr<Actor>>& Level::GetActorsOnLevel() const
 	return ActorsOnLevel;
 }
 
-void Level::AddUIOnLevel(std::shared_ptr<TextUI> actor)
+void Level::AddUIOnLevel(std::shared_ptr<TextUI> NewActor)
 {
-	TextUIsOnLevel.push_back(actor);
+	TextUIsOnLevel.push_back(NewActor);
 }
 
 const std::vector<std::shared_ptr<TextUI>>& Level::GetTextUIsOnLevel() const

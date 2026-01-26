@@ -9,7 +9,7 @@ void GameState::EndGame()
 	}
 }
 
-void GameState::BindFunctionOnEndgame(std::function<void()> func)
+void GameState::BindFunctionOnEndgame(std::function<void()> Function)
 {
-	BindedEndgameFunctions.push_back(func);
+	BindedEndgameFunctions.push_back(Function);
 }
