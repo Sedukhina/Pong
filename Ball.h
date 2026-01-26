@@ -26,4 +26,6 @@ protected:
 	const float Radius;
 	float Speed = 0.f;
 	glm::vec2 Direction = glm::vec2(0.f);
+
+	std::string EndRoundSound = "LostRound.mp3";
 };

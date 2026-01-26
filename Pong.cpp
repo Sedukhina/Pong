@@ -6,6 +6,8 @@
 #include "Scene/Level.h"
 #include "PlayerPlatform.h"
 #include "Ball.h"
+#include "Assets/SoundPlayer.h"
+#include <Globals.h>
 
 Pong::Pong()
 {
@@ -28,6 +30,8 @@ void Pong::CreateLevelAndGameState()
     PongLevel->AddActorOnLevel(Player1);
     PongLevel->AddActorOnLevel(Player2);
     std::shared_ptr<Ball> PongBall = std::make_shared<Ball>(1.f, 35.f);
+    constexpr auto EndRoundSound = "LostRound.mp3";
+    PongBall->BindFunctionOnEndRound(std::bind(& SoundPlayer::PlaySoundFromFile, Globals::GetSoundPlayer(), EndRoundSound));
     PongLevel->AddActorOnLevel(PongBall);
     
     GameState = std::make_shared < PongGameState>( 10, Player1ScoreUI, Player2ScoreUI );

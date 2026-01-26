@@ -56,8 +56,6 @@ void Ball::StartRound()
 
 void Ball::EndRound(PongPlayer Player)
 {
-	static constexpr auto EndRoundSound = "LostRound.mp3";
-	Globals::GetSoundPlayer()->PlaySoundFromFile(EndRoundSound);
 	for (std::function<void(PongPlayer)> EndGameFunction : OnRoundEndBindedFunctions)
 	{
 		std::invoke(EndGameFunction, Player);
